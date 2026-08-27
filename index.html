@@ -542,15 +542,15 @@
 
           <!-- Subtle 20-Week Progression Indicator -->
           <div class="hidden sm:flex items-center gap-2 text-xs font-mono bg-holiday-darkBg/70 px-4 py-2 rounded-xl border border-white/10 text-gray-300">
-            <span class="text-holiday-gold font-bold">01</span>
+            <span class="text-holiday-gold font-bold">00</span>
             <span class="text-holiday-gold/40">━━━━</span>
-            <span class="text-holiday-mint font-bold">05</span>
+            <span class="text-holiday-mint font-bold">04</span>
             <span class="text-holiday-mint/40">━━━━</span>
-            <span class="text-blue-400 font-bold">10</span>
+            <span class="text-blue-400 font-bold">09</span>
             <span class="text-blue-400/40">━━━━</span>
-            <span class="text-purple-400 font-bold">15</span>
+            <span class="text-purple-400 font-bold">14</span>
             <span class="text-purple-400/40">━━━━</span>
-            <span class="text-holiday-red font-bold">20</span>
+            <span class="text-holiday-red font-bold">19</span>
           </div>
         </div>
 
@@ -560,31 +560,31 @@
             data-phase="all" 
             class="phase-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-holiday-red text-white shadow-md"
           >
-            All Weeks (01–20)
+            All Weeks (00–19)
           </button>
           <button 
             data-phase="1" 
             class="phase-filter-btn px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-white/10"
           >
-            Phase 01 (Weeks 01–05)
+            Phase 01 (Weeks 00–04)
           </button>
           <button 
             data-phase="2" 
             class="phase-filter-btn px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-white/10"
           >
-            Phase 02 (Weeks 06–10)
+            Phase 02 (Weeks 05–09)
           </button>
           <button 
             data-phase="3" 
             class="phase-filter-btn px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-white/10"
           >
-            Phase 03 (Weeks 11–15)
+            Phase 03 (Weeks 10–14)
           </button>
           <button 
             data-phase="4" 
             class="phase-filter-btn px-4 py-2 rounded-xl text-xs font-semibold transition-all bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-white/10"
           >
-            Phase 04 (Weeks 16–20)
+            Phase 04 (Weeks 15–19)
           </button>
         </div>
 
@@ -619,10 +619,10 @@
             <span id="modal-phase-tag" class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-holiday-red/20 text-holiday-red border border-holiday-red/30">
               PHASE 01
             </span>
-            <span class="text-xs text-gray-400 font-mono" id="modal-route-path">/protosem/week-01</span>
+            <span class="text-xs text-gray-400 font-mono" id="modal-route-path">/protosem/week-00</span>
           </div>
 
-          <h4 class="text-2xl font-extrabold text-white" id="modal-week-title">WEEK 01</h4>
+          <h4 class="text-2xl font-extrabold text-white" id="modal-week-title">WEEK 00</h4>
 
           <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-xs text-gray-300 space-y-1.5">
             <div class="flex items-center gap-2 text-holiday-gold font-semibold">
@@ -993,26 +993,26 @@
       const modalPhaseTag = document.getElementById('modal-phase-tag');
       const modalRoutePath = document.getElementById('modal-route-path');
 
-      // Reusable 20-Week Data Architecture
+      // Reusable 20-Week Data Architecture (Weeks 00 to 19)
       const protoSemWeeks = Array.from({ length: 20 }, (_, i) => {
-        const weekNum = i + 1;
+        const weekNum = i; // 0 to 19
         const formatted = weekNum.toString().padStart(2, '0');
         let phase = 1;
         let phaseLabel = 'PHASE 01';
         let accentBorder = 'border-l-holiday-gold';
         let phaseColor = 'text-holiday-gold bg-holiday-gold/15 border-holiday-gold/30';
         
-        if (weekNum >= 6 && weekNum <= 10) {
+        if (weekNum >= 5 && weekNum <= 9) {
           phase = 2;
           phaseLabel = 'PHASE 02';
           accentBorder = 'border-l-holiday-mint';
           phaseColor = 'text-holiday-mint bg-holiday-pine/30 border-holiday-pine';
-        } else if (weekNum >= 11 && weekNum <= 15) {
+        } else if (weekNum >= 10 && weekNum <= 14) {
           phase = 3;
           phaseLabel = 'PHASE 03';
           accentBorder = 'border-l-blue-400';
           phaseColor = 'text-blue-300 bg-blue-500/20 border-blue-400/30';
-        } else if (weekNum >= 16 && weekNum <= 20) {
+        } else if (weekNum >= 15 && weekNum <= 19) {
           phase = 4;
           phaseLabel = 'PHASE 04';
           accentBorder = 'border-l-holiday-red';
