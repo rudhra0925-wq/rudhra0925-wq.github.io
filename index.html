@@ -1180,6 +1180,26 @@
           "Communication, Creativity & Teamwork",
           "Self-Discovery & Problem Identification",
           "Foundation for Innovation & Entrepreneurship"
+        ],
+        articleLink: "protosem-week-00.html"
+      };
+
+      const weekOneContent = {
+        title: "Week One – Design Thinking, Analytics & Practical Innovation",
+        paragraphs: [
+          "My first week at ProTosem was an exciting journey filled with learning, creativity, and new experiences.",
+          "We explored topics like Instagram algorithms, Design Thinking, Power BI, SWOT analysis, Prospect Theory, portfolio building, and application development.",
+          "Our pharmacy-sector project helped us apply these concepts through teamwork and practical activities.",
+          "We also gained valuable insights from our mentors and alumni about career paths and future opportunities.",
+          "Overall, the week helped me think differently, learn practically, and discover new perspectives."
+        ],
+        takeaways: [
+          "Design Thinking & App Development",
+          "Power BI & SWOT Analysis",
+          "Prospect Theory & Market Behavior",
+          "Pharmacy-Sector Applied Project",
+          "Instagram Algorithms & Portfolio Building",
+          "Mentor & Alumni Career Guidance"
         ]
       };
 
@@ -1209,19 +1229,39 @@
         }
 
         const isWeekZero = (weekNum === 0);
+        const isWeekOne = (weekNum === 1);
+        const hasStory = isWeekZero || isWeekOne;
+
+        let subtitle = null;
+        let shortDesc = null;
+        let longDesc = null;
+
+        if (isWeekZero) {
+          subtitle = "The Beginning of My Protosem Journey";
+          shortDesc = "Week Zero was an exciting start to my Protosem journey, filled with fun activities, games, and new experiences. It helped us interact with new people, break the ice, and build strong connections with our teammates.";
+          longDesc = "The week also helped us understand our personalities (16 Personalities Protagonist ENFJ), identify real-world problems, and explore our strengths—giving us a strong foundation for innovation and entrepreneurship.";
+        } else if (isWeekOne) {
+          subtitle = "Design Thinking, Power BI & Pharmacy Project";
+          shortDesc = "My first week at ProTosem was an exciting journey filled with learning, creativity, and new experiences. We explored topics like Instagram algorithms, Design Thinking, Power BI, SWOT analysis, Prospect Theory, portfolio building, and application development.";
+          longDesc = "Our pharmacy-sector project helped us apply these concepts through teamwork and practical activities. We also gained valuable insights from mentors and alumni—helping me think differently, learn practically, and discover new perspectives.";
+        }
 
         return {
           week: weekNum,
           formatted: formatted,
-          title: isWeekZero ? `WEEK ${formatted} — Story Live` : `WEEK ${formatted}`,
-          subtitle: isWeekZero ? "The Beginning of My Protosem Journey" : null,
-          hasStory: isWeekZero,
+          title: hasStory ? `WEEK ${formatted} — Story Live` : `WEEK ${formatted}`,
+          subtitle: subtitle,
+          shortDesc: shortDesc,
+          longDesc: longDesc,
+          hasStory: hasStory,
+          isWeekZero: isWeekZero,
+          isWeekOne: isWeekOne,
           phase: phase,
           phaseLabel: phaseLabel,
-          accentBorder: isWeekZero ? 'border-l-holiday-gold ring-1 ring-holiday-gold/40' : accentBorder,
+          accentBorder: isWeekZero ? 'border-l-holiday-gold ring-1 ring-holiday-gold/40' : (isWeekOne ? 'border-l-holiday-mint ring-1 ring-holiday-mint/40' : accentBorder),
           phaseColor: phaseColor,
-          status: isWeekZero ? 'Published' : 'Coming Soon',
-          subLabel: isWeekZero ? 'READ STORY ✨' : 'FIELD NOTES IN PROGRESS',
+          status: hasStory ? 'Published' : 'Coming Soon',
+          subLabel: hasStory ? 'READ STORY ✨' : 'FIELD NOTES IN PROGRESS',
           slug: `week-${formatted}`,
           route: `/protosem/week-${formatted}`
         };
@@ -1245,6 +1285,10 @@
           card.setAttribute('aria-label', `${item.title}, ${item.phaseLabel}, ${item.subLabel}`);
 
           if (isFeatured) {
+            const chapterTag = item.isWeekZero ? 'CHAPTER 00' : 'CHAPTER 01';
+            const badgeColor = item.isWeekZero ? 'text-holiday-gold bg-holiday-gold/15 border-holiday-gold/30' : 'text-holiday-mint bg-holiday-pine/40 border-holiday-pine';
+            const weekNumber = item.isWeekZero ? 'WEEK 00' : 'WEEK 01';
+
             card.innerHTML = `
               <div>
                 <div class="flex items-center justify-between gap-2 mb-3">
@@ -1252,31 +1296,29 @@
                     <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-md ${item.phaseColor}">
                       ${item.phaseLabel}
                     </span>
-                    <span class="text-[10px] font-bold text-holiday-gold bg-holiday-gold/15 px-2.5 py-0.5 rounded-md border border-holiday-gold/30 flex items-center gap-1">
-                      <i class="fa-solid fa-sparkles text-[9px]"></i> CHAPTER 00
+                    <span class="text-[10px] font-bold ${badgeColor} px-2.5 py-0.5 rounded-md border flex items-center gap-1">
+                      <i class="fa-solid fa-sparkles text-[9px]"></i> ${chapterTag}
                     </span>
                   </div>
-                  <span class="text-xs font-mono text-holiday-gold font-bold">WEEK 00</span>
+                  <span class="text-xs font-mono font-bold ${item.isWeekZero ? 'text-holiday-gold' : 'text-holiday-mint'}">${weekNumber}</span>
                 </div>
 
                 <h4 class="text-base sm:text-lg font-extrabold text-white group-hover:text-holiday-gold transition-colors tracking-tight">
-                  Week Zero – The Beginning of My Protosem Journey
+                  ${item.subtitle}
                 </h4>
 
                 <p class="text-xs text-gray-300 leading-relaxed mt-2.5">
-                  Week Zero was an exciting start to my Protosem journey, filled with fun activities, games, and new experiences. It helped us interact with new people, break the ice, and build strong connections with our teammates. Through various challenges and team activities, we learned the importance of communication, creativity, and teamwork.
+                  ${item.shortDesc}
                 </p>
-                <p class="text-xs text-gray-400 leading-relaxed mt-1.5 hidden sm:block">
-                  The week also helped us understand our personalities, identify real-world problems, and explore our strengths—giving us a strong foundation for an exciting journey of learning, innovation, and entrepreneurship.
-                </p>
+                ${item.longDesc ? `<p class="text-xs text-gray-400 leading-relaxed mt-1.5 hidden sm:block">${item.longDesc}</p>` : ''}
               </div>
 
               <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
-                <span class="text-[11px] font-bold text-holiday-gold flex items-center gap-1.5">
+                <span class="text-[11px] font-bold ${item.isWeekZero ? 'text-holiday-gold' : 'text-holiday-mint'} flex items-center gap-1.5">
                   <i class="fa-solid fa-book-open text-xs"></i>
-                  <span>Read Full Article & Takeaways</span>
+                  <span>${item.isWeekZero ? 'Read Full Article & Photos' : 'Read Week 01 Highlights'}</span>
                 </span>
-                <span class="text-holiday-gold group-hover:translate-x-1.5 transition-transform flex items-center gap-1 font-semibold text-xs">
+                <span class="${item.isWeekZero ? 'text-holiday-gold' : 'text-holiday-mint'} group-hover:translate-x-1.5 transition-transform flex items-center gap-1 font-semibold text-xs">
                   <span>Explore</span>
                   <i class="fa-solid fa-arrow-right text-[10px]"></i>
                 </span>
@@ -1317,7 +1359,7 @@
 
             const modalBody = document.getElementById('protosem-modal-body');
             
-            if (item.hasStory) {
+            if (item.isWeekZero) {
               modalWeekTitle.textContent = "Week Zero – The Beginning of My Protosem Journey";
               modalBody.innerHTML = `
                 <div class="space-y-4 text-xs sm:text-sm text-gray-200 leading-relaxed">
@@ -1333,7 +1375,7 @@
                   <div class="pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
                     <div class="text-[11px] font-bold uppercase tracking-wider text-holiday-gold">Key Takeaways & Foundation:</div>
                     <a href="protosem-week-00.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-holiday-red hover:bg-holiday-darkRed text-white font-bold text-xs transition-all shadow-md">
-                      <span>Read Dedicated Article Page</span>
+                      <span>Read Dedicated Article Page & Photos</span>
                       <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                     </a>
                   </div>
@@ -1344,6 +1386,32 @@
                         <span>${t}</span>
                       </div>
                     `).join('')}
+                  </div>
+                </div>
+              `;
+            } else if (item.isWeekOne) {
+              modalWeekTitle.textContent = "Week One – Design Thinking, Analytics & Practical Innovation";
+              modalBody.innerHTML = `
+                <div class="space-y-4 text-xs sm:text-sm text-gray-200 leading-relaxed">
+                  <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-holiday-pine/40 text-holiday-mint font-bold text-xs border border-holiday-pine">
+                    <i class="fa-solid fa-sparkles text-xs"></i>
+                    <span>Published Article • Chapter 01</span>
+                  </div>
+
+                  <div class="space-y-3 pt-2 text-gray-300">
+                    ${weekOneContent.paragraphs.map(p => `<p class="leading-relaxed">${p}</p>`).join('')}
+                  </div>
+
+                  <div class="pt-3 border-t border-white/10">
+                    <div class="text-[11px] font-bold uppercase tracking-wider text-holiday-mint mb-2">Key Skills & Projects Explored:</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      ${weekOneContent.takeaways.map(t => `
+                        <div class="flex items-center gap-2 p-2 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-300">
+                          <i class="fa-solid fa-check text-holiday-mint text-xs"></i>
+                          <span>${t}</span>
+                        </div>
+                      `).join('')}
+                    </div>
                   </div>
                 </div>
               `;
