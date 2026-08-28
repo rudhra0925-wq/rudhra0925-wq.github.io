@@ -622,21 +622,23 @@
             <span class="text-xs text-gray-400 font-mono" id="modal-route-path">/protosem/week-00</span>
           </div>
 
-          <h4 class="text-2xl font-extrabold text-white" id="modal-week-title">WEEK 00</h4>
+          <h4 class="text-xl sm:text-2xl font-extrabold text-white" id="modal-week-title">WEEK 00</h4>
 
-          <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-xs text-gray-300 space-y-1.5">
-            <div class="flex items-center gap-2 text-holiday-gold font-semibold">
-              <i class="fa-solid fa-hourglass-half"></i>
-              <span>Status: Field Notes In Progress</span>
+          <div id="protosem-modal-body">
+            <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-xs text-gray-300 space-y-1.5">
+              <div class="flex items-center gap-2 text-holiday-gold font-semibold">
+                <i class="fa-solid fa-hourglass-half"></i>
+                <span>Status: Field Notes In Progress</span>
+              </div>
+              <p class="text-gray-400">
+                Detailed technical journey, reflections, prototyping artifacts, and insights for this week will be published here soon.
+              </p>
             </div>
-            <p class="text-gray-400">
-              Detailed technical journey, reflections, prototyping artifacts, and insights for this week will be published here soon.
-            </p>
           </div>
 
           <div class="pt-2 flex justify-end gap-2">
             <button id="dismiss-modal-btn" class="px-4 py-2 rounded-xl bg-holiday-gold/20 hover:bg-holiday-gold/30 text-holiday-gold font-semibold text-xs transition-colors">
-              Got it
+              Close
             </button>
           </div>
         </div>
@@ -1164,6 +1166,23 @@
       const modalRoutePath = document.getElementById('modal-route-path');
 
       // Reusable 20-Week Data Architecture (Weeks 00 to 19)
+      const weekZeroContent = {
+        title: "Week Zero – The Beginning of My Protosem Journey",
+        paragraphs: [
+          "Week Zero was an exciting start to my Protosem journey, filled with fun activities, games, and new experiences.",
+          "It helped us interact with new people, break the ice, and build strong connections with our teammates.",
+          "Through various challenges and team activities, we learned the importance of communication, creativity, and teamwork.",
+          "The week also helped us understand our personalities, identify real-world problems, and explore our strengths.",
+          "Overall, Week Zero gave us a strong foundation and prepared us for an exciting journey of learning, innovation, and entrepreneurship."
+        ],
+        takeaways: [
+          "Team Connections & Icebreaking",
+          "Communication, Creativity & Teamwork",
+          "Self-Discovery & Problem Identification",
+          "Foundation for Innovation & Entrepreneurship"
+        ]
+      };
+
       const protoSemWeeks = Array.from({ length: 20 }, (_, i) => {
         const weekNum = i; // 0 to 19
         const formatted = weekNum.toString().padStart(2, '0');
@@ -1189,16 +1208,20 @@
           phaseColor = 'text-holiday-red bg-holiday-red/20 border-holiday-red/30';
         }
 
+        const isWeekZero = (weekNum === 0);
+
         return {
           week: weekNum,
           formatted: formatted,
-          title: `WEEK ${formatted}`,
+          title: isWeekZero ? `WEEK ${formatted} — Story Live` : `WEEK ${formatted}`,
+          subtitle: isWeekZero ? "The Beginning of My Protosem Journey" : null,
+          hasStory: isWeekZero,
           phase: phase,
           phaseLabel: phaseLabel,
-          accentBorder: accentBorder,
+          accentBorder: isWeekZero ? 'border-l-holiday-gold ring-1 ring-holiday-gold/40' : accentBorder,
           phaseColor: phaseColor,
-          status: 'Coming Soon',
-          subLabel: 'FIELD NOTES IN PROGRESS',
+          status: isWeekZero ? 'Published' : 'Coming Soon',
+          subLabel: isWeekZero ? 'READ STORY ✨' : 'FIELD NOTES IN PROGRESS',
           slug: `week-${formatted}`,
           route: `/protosem/week-${formatted}`
         };
@@ -1214,7 +1237,7 @@
 
         filtered.forEach(item => {
           const card = document.createElement('div');
-          card.className = `glass-panel glass-panel-hover p-4 rounded-2xl cursor-pointer transition-all duration-300 group flex flex-col justify-between ${item.accentBorder} border-l-[3px] relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-holiday-gold`;
+          card.className = `glass-panel glass-panel-hover p-4 rounded-2xl cursor-pointer transition-all duration-300 group flex flex-col justify-between ${item.accentBorder} border-l-[3px] relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-holiday-gold ${item.hasStory ? 'bg-holiday-cardBg border-holiday-gold/30 shadow-lg shadow-holiday-gold/5' : ''}`;
           card.setAttribute('tabindex', '0');
           card.setAttribute('role', 'button');
           card.setAttribute('aria-label', `${item.title}, ${item.phaseLabel}, ${item.subLabel}`);
@@ -1225,20 +1248,21 @@
                 <span class="text-[10px] font-bold px-2 py-0.5 rounded-md ${item.phaseColor}">
                   ${item.phaseLabel}
                 </span>
-                <span class="text-[10px] font-mono text-gray-500 group-hover:text-gray-400 transition-colors">
-                  #${item.formatted}
+                <span class="text-[10px] font-mono ${item.hasStory ? 'text-holiday-gold font-bold' : 'text-gray-500'} group-hover:text-gray-400 transition-colors">
+                  ${item.hasStory ? '★ STORY' : '#' + item.formatted}
                 </span>
               </div>
               <h4 class="text-base font-extrabold text-white group-hover:text-holiday-gold transition-colors tracking-tight">
-                ${item.title}
+                WEEK ${item.formatted}
               </h4>
+              ${item.subtitle ? `<p class="text-xs text-holiday-goldLight font-medium mt-1 line-clamp-1">${item.subtitle}</p>` : ''}
             </div>
 
             <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs">
-              <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider group-hover:text-holiday-goldLight transition-colors">
+              <span class="text-[10px] font-semibold ${item.hasStory ? 'text-holiday-gold font-bold' : 'text-gray-400'} uppercase tracking-wider group-hover:text-holiday-goldLight transition-colors">
                 ${item.subLabel}
               </span>
-              <span class="text-gray-400 group-hover:text-holiday-gold group-hover:translate-x-1 transition-all">
+              <span class="${item.hasStory ? 'text-holiday-gold' : 'text-gray-400'} group-hover:text-holiday-gold group-hover:translate-x-1 transition-all">
                 <i class="fa-solid fa-arrow-right text-[11px]"></i>
               </span>
             </div>
@@ -1246,10 +1270,53 @@
 
           // Click & Keyboard Interaction
           const openWeekModal = () => {
-            modalWeekTitle.textContent = item.title;
             modalPhaseTag.textContent = item.phaseLabel;
             modalPhaseTag.className = `px-2.5 py-1 rounded-md text-[11px] font-bold ${item.phaseColor}`;
             modalRoutePath.textContent = item.route;
+
+            const modalBody = document.getElementById('protosem-modal-body');
+            
+            if (item.hasStory) {
+              modalWeekTitle.textContent = "Week Zero – The Beginning of My Protosem Journey";
+              modalBody.innerHTML = `
+                <div class="space-y-4 text-xs sm:text-sm text-gray-200 leading-relaxed">
+                  <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-holiday-gold/15 text-holiday-gold font-bold text-xs border border-holiday-gold/30">
+                    <i class="fa-solid fa-sparkles text-xs"></i>
+                    <span>Published Article • Chapter 00</span>
+                  </div>
+
+                  <div class="space-y-3 pt-2 text-gray-300">
+                    ${weekZeroContent.paragraphs.map(p => `<p class="leading-relaxed">${p}</p>`).join('')}
+                  </div>
+
+                  <div class="pt-3 border-t border-white/10">
+                    <div class="text-[11px] font-bold uppercase tracking-wider text-holiday-gold mb-2">Key Takeaways & Foundation:</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      ${weekZeroContent.takeaways.map(t => `
+                        <div class="flex items-center gap-2 p-2 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-300">
+                          <i class="fa-solid fa-check text-holiday-mint text-xs"></i>
+                          <span>${t}</span>
+                        </div>
+                      `).join('')}
+                    </div>
+                  </div>
+                </div>
+              `;
+            } else {
+              modalWeekTitle.textContent = item.title;
+              modalBody.innerHTML = `
+                <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-xs text-gray-300 space-y-1.5">
+                  <div class="flex items-center gap-2 text-holiday-gold font-semibold">
+                    <i class="fa-solid fa-hourglass-half"></i>
+                    <span>Status: Field Notes In Progress</span>
+                  </div>
+                  <p class="text-gray-400">
+                    Detailed technical journey, reflections, prototyping artifacts, and insights for this week will be published here soon.
+                  </p>
+                </div>
+              `;
+            }
+
             modal.classList.remove('hidden');
             modal.classList.add('flex');
           };
