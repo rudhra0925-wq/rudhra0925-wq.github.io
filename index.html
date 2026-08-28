@@ -1237,36 +1237,77 @@
 
         filtered.forEach(item => {
           const card = document.createElement('div');
-          card.className = `glass-panel glass-panel-hover p-4 rounded-2xl cursor-pointer transition-all duration-300 group flex flex-col justify-between ${item.accentBorder} border-l-[3px] relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-holiday-gold ${item.hasStory ? 'bg-holiday-cardBg border-holiday-gold/30 shadow-lg shadow-holiday-gold/5' : ''}`;
+          const isFeatured = item.hasStory;
+          
+          card.className = `glass-panel glass-panel-hover p-5 rounded-2xl cursor-pointer transition-all duration-300 group flex flex-col justify-between ${item.accentBorder} border-l-[3px] relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-holiday-gold ${isFeatured ? 'sm:col-span-2 md:col-span-2 lg:col-span-2 xl:col-span-2 bg-gradient-to-br from-holiday-cardBg to-holiday-darkBg/90 border border-holiday-gold/40 shadow-xl shadow-holiday-gold/10' : ''}`;
           card.setAttribute('tabindex', '0');
           card.setAttribute('role', 'button');
           card.setAttribute('aria-label', `${item.title}, ${item.phaseLabel}, ${item.subLabel}`);
 
-          card.innerHTML = `
-            <div>
-              <div class="flex items-center justify-between gap-1 mb-2.5">
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded-md ${item.phaseColor}">
-                  ${item.phaseLabel}
+          if (isFeatured) {
+            card.innerHTML = `
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-3">
+                  <div class="flex items-center gap-2">
+                    <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-md ${item.phaseColor}">
+                      ${item.phaseLabel}
+                    </span>
+                    <span class="text-[10px] font-bold text-holiday-gold bg-holiday-gold/15 px-2.5 py-0.5 rounded-md border border-holiday-gold/30 flex items-center gap-1">
+                      <i class="fa-solid fa-sparkles text-[9px]"></i> CHAPTER 00
+                    </span>
+                  </div>
+                  <span class="text-xs font-mono text-holiday-gold font-bold">WEEK 00</span>
+                </div>
+
+                <h4 class="text-base sm:text-lg font-extrabold text-white group-hover:text-holiday-gold transition-colors tracking-tight">
+                  Week Zero – The Beginning of My Protosem Journey
+                </h4>
+
+                <p class="text-xs text-gray-300 leading-relaxed mt-2.5">
+                  Week Zero was an exciting start to my Protosem journey, filled with fun activities, games, and new experiences. It helped us interact with new people, break the ice, and build strong connections with our teammates. Through various challenges and team activities, we learned the importance of communication, creativity, and teamwork.
+                </p>
+                <p class="text-xs text-gray-400 leading-relaxed mt-1.5 hidden sm:block">
+                  The week also helped us understand our personalities, identify real-world problems, and explore our strengths—giving us a strong foundation for an exciting journey of learning, innovation, and entrepreneurship.
+                </p>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
+                <span class="text-[11px] font-bold text-holiday-gold flex items-center gap-1.5">
+                  <i class="fa-solid fa-book-open text-xs"></i>
+                  <span>Read Full Article & Takeaways</span>
                 </span>
-                <span class="text-[10px] font-mono ${item.hasStory ? 'text-holiday-gold font-bold' : 'text-gray-500'} group-hover:text-gray-400 transition-colors">
-                  ${item.hasStory ? '★ STORY' : '#' + item.formatted}
+                <span class="text-holiday-gold group-hover:translate-x-1.5 transition-transform flex items-center gap-1 font-semibold text-xs">
+                  <span>Explore</span>
+                  <i class="fa-solid fa-arrow-right text-[10px]"></i>
                 </span>
               </div>
-              <h4 class="text-base font-extrabold text-white group-hover:text-holiday-gold transition-colors tracking-tight">
-                WEEK ${item.formatted}
-              </h4>
-              ${item.subtitle ? `<p class="text-xs text-holiday-goldLight font-medium mt-1 line-clamp-1">${item.subtitle}</p>` : ''}
-            </div>
+            `;
+          } else {
+            card.innerHTML = `
+              <div>
+                <div class="flex items-center justify-between gap-1 mb-2.5">
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-md ${item.phaseColor}">
+                    ${item.phaseLabel}
+                  </span>
+                  <span class="text-[10px] font-mono text-gray-500 group-hover:text-gray-400 transition-colors">
+                    #${item.formatted}
+                  </span>
+                </div>
+                <h4 class="text-base font-extrabold text-white group-hover:text-holiday-gold transition-colors tracking-tight">
+                  WEEK ${item.formatted}
+                </h4>
+              </div>
 
-            <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs">
-              <span class="text-[10px] font-semibold ${item.hasStory ? 'text-holiday-gold font-bold' : 'text-gray-400'} uppercase tracking-wider group-hover:text-holiday-goldLight transition-colors">
-                ${item.subLabel}
-              </span>
-              <span class="${item.hasStory ? 'text-holiday-gold' : 'text-gray-400'} group-hover:text-holiday-gold group-hover:translate-x-1 transition-all">
-                <i class="fa-solid fa-arrow-right text-[11px]"></i>
-              </span>
-            </div>
-          `;
+              <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs">
+                <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider group-hover:text-holiday-goldLight transition-colors">
+                  ${item.subLabel}
+                </span>
+                <span class="text-gray-400 group-hover:text-holiday-gold group-hover:translate-x-1 transition-all">
+                  <i class="fa-solid fa-arrow-right text-[11px]"></i>
+                </span>
+              </div>
+            `;
+          }
 
           // Click & Keyboard Interaction
           const openWeekModal = () => {
