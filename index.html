@@ -1237,13 +1237,13 @@
         let longDesc = null;
 
         if (isWeekZero) {
-          subtitle = "The Beginning of My Protosem Journey";
-          shortDesc = "Week Zero was an exciting start to my Protosem journey, filled with fun activities, games, and new experiences. It helped us interact with new people, break the ice, and build strong connections with our teammates.";
-          longDesc = "The week also helped us understand our personalities (16 Personalities Protagonist ENFJ), identify real-world problems, and explore our strengths—giving us a strong foundation for innovation and entrepreneurship.";
+          subtitle = "Week Zero – The Beginning of My Protosem Journey";
+          shortDesc = "Week Zero was an exciting start to my Protosem journey, filled with fun activities, games, and new experiences. It helped us interact with new people, break the ice, and build strong connections with our teammates. Through various challenges and team activities, we learned the importance of communication, creativity, and teamwork.";
+          longDesc = "The week also helped us understand our personalities, identify real-world problems, and explore our strengths—giving us a strong foundation for an exciting journey of learning, innovation, and entrepreneurship.";
         } else if (isWeekOne) {
-          subtitle = "Design Thinking, Power BI & Pharmacy Project";
+          subtitle = "Week One – My First Week at ProTosem";
           shortDesc = "My first week at ProTosem was an exciting journey filled with learning, creativity, and new experiences. We explored topics like Instagram algorithms, Design Thinking, Power BI, SWOT analysis, Prospect Theory, portfolio building, and application development.";
-          longDesc = "Our pharmacy-sector project helped us apply these concepts through teamwork and practical activities. We also gained valuable insights from mentors and alumni—helping me think differently, learn practically, and discover new perspectives.";
+          longDesc = "Our pharmacy-sector project helped us apply these concepts through teamwork and practical activities. We also gained valuable insights from our mentors and alumni about career paths and future opportunities. Overall, the week helped me think differently, learn practically, and discover new perspectives.";
         }
 
         return {
@@ -1316,7 +1316,7 @@
               <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
                 <span class="text-[11px] font-bold ${item.isWeekZero ? 'text-holiday-gold' : 'text-holiday-mint'} flex items-center gap-1.5">
                   <i class="fa-solid fa-book-open text-xs"></i>
-                  <span>${item.isWeekZero ? 'Read Full Article & Photos' : 'Read Week 01 Highlights'}</span>
+                  <span>Read Full Description</span>
                 </span>
                 <span class="${item.isWeekZero ? 'text-holiday-gold' : 'text-holiday-mint'} group-hover:translate-x-1.5 transition-transform flex items-center gap-1 font-semibold text-xs">
                   <span>Explore</span>
@@ -1365,7 +1365,7 @@
                 <div class="space-y-4 text-xs sm:text-sm text-gray-200 leading-relaxed">
                   <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-holiday-gold/15 text-holiday-gold font-bold text-xs border border-holiday-gold/30">
                     <i class="fa-solid fa-sparkles text-xs"></i>
-                    <span>Published Article • Chapter 00</span>
+                    <span>Published Description • Chapter 00</span>
                   </div>
 
                   <div class="space-y-3 pt-2 text-gray-300">
@@ -1373,9 +1373,9 @@
                   </div>
 
                   <div class="pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
-                    <div class="text-[11px] font-bold uppercase tracking-wider text-holiday-gold">Key Takeaways & Foundation:</div>
+                    <div class="text-[11px] font-bold uppercase tracking-wider text-holiday-gold">Key Takeaways:</div>
                     <a href="protosem-week-00.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-holiday-red hover:bg-holiday-darkRed text-white font-bold text-xs transition-all shadow-md">
-                      <span>Read Dedicated Article Page & Photos</span>
+                      <span>View Full Document & Photos</span>
                       <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                     </a>
                   </div>
@@ -1390,32 +1390,28 @@
                 </div>
               `;
             } else if (item.isWeekOne) {
-              modalWeekTitle.textContent = "Week One – Design Thinking, Analytics & Practical Innovation";
+              modalWeekTitle.textContent = "Week One – My First Week at ProTosem";
               modalBody.innerHTML = `
                 <div class="space-y-4 text-xs sm:text-sm text-gray-200 leading-relaxed">
                   <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-holiday-pine/40 text-holiday-mint font-bold text-xs border border-holiday-pine">
                     <i class="fa-solid fa-sparkles text-xs"></i>
-                    <span>Published Article • Chapter 01</span>
+                    <span>Published Description • Chapter 01</span>
                   </div>
 
                   <div class="space-y-3 pt-2 text-gray-300">
                     ${weekOneContent.paragraphs.map(p => `<p class="leading-relaxed">${p}</p>`).join('')}
                   </div>
 
-                  <div class="pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
-                    <div class="text-[11px] font-bold uppercase tracking-wider text-holiday-mint">Key Skills & Projects Explored:</div>
-                    <a href="protosem-week-01.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-holiday-pine hover:bg-holiday-emerald text-white font-bold text-xs transition-all shadow-md">
-                      <span>Read Dedicated Article Page</span>
-                      <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                    </a>
-                  </div>
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    ${weekOneContent.takeaways.map(t => `
-                      <div class="flex items-center gap-2 p-2 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-300">
-                        <i class="fa-solid fa-check text-holiday-mint text-xs"></i>
-                        <span>${t}</span>
-                      </div>
-                    `).join('')}
+                  <div class="pt-3 border-t border-white/10">
+                    <div class="text-[11px] font-bold uppercase tracking-wider text-holiday-mint mb-2">Key Topics Explored:</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      ${weekOneContent.takeaways.map(t => `
+                        <div class="flex items-center gap-2 p-2 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-300">
+                          <i class="fa-solid fa-check text-holiday-mint text-xs"></i>
+                          <span>${t}</span>
+                        </div>
+                      `).join('')}
+                    </div>
                   </div>
                 </div>
               `;
