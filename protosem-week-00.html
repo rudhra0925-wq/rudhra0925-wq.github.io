@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My First Week at Protosem (Week Zero) | Rithika H</title>
+  <meta name="description" content="A reflective journal on Week Zero of PRICE ProtoSem: A journey of learning, teamwork, 16 Personalities, Marshmallow Challenge, Forge orientation, and entrepreneurial inspiration by Rithika H.">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Cinzel:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            festive: ['Cinzel', 'serif']
+          },
+          colors: {
+            holiday: {
+              red: '#c1121f',
+              darkRed: '#780000',
+              emerald: '#1b4332',
+              pine: '#2d6a4f',
+              mint: '#52b788',
+              gold: '#e0a96d',
+              goldLight: '#f3d5b5',
+              darkBg: '#09130e',
+              cardBg: 'rgba(18, 38, 29, 0.7)',
+              glassBorder: 'rgba(243, 213, 181, 0.15)'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #09130e;
+      color: #f1faee;
+      overflow-x: hidden;
+    }
+
+    .glass-panel {
+      background: rgba(14, 31, 23, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(224, 169, 109, 0.18);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .glass-panel-hover {
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-panel-hover:hover {
+      transform: translateY(-3px);
+      border-color: rgba(224, 169, 109, 0.4);
+      box-shadow: 0 12px 35px 0 rgba(193, 18, 31, 0.2), 0 0 20px rgba(224, 169, 109, 0.15);
+    }
+
+    .glow-blob {
+      filter: blur(80px);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    #snow-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 40;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #09130e;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2d6a4f;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #c1121f;
+    }
+  </style>
+</head>
+
+<body class="font-sans antialiased selection:bg-holiday-red selection:text-white">
+
+  <!-- Interactive Falling Snow Particles Canvas -->
+  <canvas id="snow-canvas"></canvas>
+
+  <!-- Ambient Glow Blobs -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+    <div class="glow-blob absolute -top-24 -left-20 w-96 h-96 rounded-full bg-holiday-darkRed"></div>
+    <div class="glow-blob absolute top-1/2 -right-24 w-[30rem] h-[30rem] rounded-full bg-holiday-pine"></div>
+    <div class="glow-blob absolute bottom-10 left-1/3 w-96 h-96 rounded-full bg-holiday-darkRed"></div>
+  </div>
+
+  <!-- Top Sticky Navigation Bar -->
+  <header class="fixed top-0 left-0 right-0 z-50 px-4 py-3">
+    <nav class="max-w-4xl mx-auto glass-panel rounded-2xl px-5 py-3 flex items-center justify-between">
+      <!-- Back to Portfolio Link -->
+      <a href="index.html#protosem" class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-300 hover:text-holiday-gold transition-colors group">
+        <span class="w-7 h-7 rounded-lg bg-white/5 group-hover:bg-holiday-red flex items-center justify-center transition-colors">
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+        </span>
+        <span>Back to Portfolio</span>
+      </a>
+
+      <!-- Brand / Badge -->
+      <div class="hidden sm:flex items-center gap-2">
+        <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-holiday-gold/15 text-holiday-gold border border-holiday-gold/30">
+          PRICE ProtoSem
+        </span>
+      </div>
+
+      <!-- Action Links -->
+      <div class="flex items-center gap-3">
+        <a href="resume.html" class="px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-holiday-gold/15 text-holiday-gold border border-holiday-gold/30 hover:bg-holiday-gold hover:text-holiday-darkBg transition-all flex items-center gap-1.5">
+          <i class="fa-solid fa-file-invoice"></i>
+          <span>ATS Resume</span>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Article Container -->
+  <main class="relative z-10 pt-28 pb-20 px-4 max-w-4xl mx-auto space-y-12">
+
+    <!-- Article Header / Hero Banner -->
+    <header class="glass-panel p-8 sm:p-12 rounded-3xl space-y-6 border-holiday-gold/30 relative overflow-hidden">
+      <div class="glow-blob absolute -top-12 -right-12 w-64 h-64 bg-holiday-pine/40 rounded-full"></div>
+
+      <!-- Metadata Badges -->
+      <div class="relative z-10 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2">
+          <span class="px-3 py-1 rounded-full bg-holiday-red/20 text-holiday-goldLight font-bold border border-holiday-red/30 uppercase tracking-wider">
+            Phase 01 • Week 00
+          </span>
+          <span class="px-3 py-1 rounded-full bg-holiday-pine/40 text-holiday-mint font-semibold border border-holiday-pine">
+            <i class="fa-solid fa-calendar mr-1"></i> Foundation & Icebreaking
+          </span>
+        </div>
+        <span class="text-gray-400 font-mono flex items-center gap-1.5">
+          <i class="fa-regular fa-clock"></i> 5 min read
+        </span>
+      </div>
+
+      <!-- Article Title & Subtitle -->
+      <div class="relative z-10 space-y-3">
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+          My First Week at Protosem
+        </h1>
+        <p class="text-lg sm:text-xl text-holiday-gold font-medium leading-relaxed">
+          Week Zero — A Journey of Learning, Teamwork and New Experiences
+        </p>
+      </div>
+
+      <!-- Author Bio Byline -->
+      <div class="relative z-10 pt-4 border-t border-white/10 flex items-center gap-3">
+        <img 
+          src="https://ui-avatars.com/api/?name=Rithika+H&background=c1121f&color=fdf0d5&size=96&bold=true" 
+          alt="Rithika H" 
+          class="w-11 h-11 rounded-full border border-holiday-gold/40 shadow"
+        >
+        <div>
+          <div class="text-sm font-bold text-white">Rithika H</div>
+          <div class="text-xs text-gray-400">Innovation Engineer Trainee • PRICE ProtoSem (Batch 2026)</div>
+        </div>
+      </div>
+    </header>
+
+
+    <!-- Executive Summary / Overview Card -->
+    <section class="glass-panel p-6 sm:p-8 rounded-3xl border-l-4 border-l-holiday-gold space-y-3">
+      <h2 class="text-xs font-bold text-holiday-gold uppercase tracking-widest flex items-center gap-2">
+        <i class="fa-solid fa-compass"></i>
+        <span>The Beginning of My Protosem Journey</span>
+      </h2>
+      <p class="text-sm sm:text-base text-gray-200 leading-relaxed">
+        Week Zero was an exciting start to my Protosem journey, filled with fun activities, games, and new experiences. It helped us interact with new people, break the ice, and build strong connections with our teammates.
+      </p>
+      <p class="text-sm sm:text-base text-gray-300 leading-relaxed">
+        Through various challenges and team activities, we learned the importance of communication, creativity, and teamwork. The week also helped us understand our personalities, identify real-world problems, and explore our strengths. Overall, Week Zero gave us a strong foundation and prepared us for an exciting journey of learning, innovation, and entrepreneurship.
+      </p>
+    </section>
+
+
+    <!-- Day-by-Day Chronological Narrative -->
+    <section class="space-y-8">
+      
+      <div class="flex items-center gap-3 mb-2">
+        <span class="text-holiday-red text-xl"><i class="fa-solid fa-timeline"></i></span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Day-by-Day Experience</h2>
+        <div class="flex-grow h-px bg-gradient-to-r from-holiday-red/40 to-transparent"></div>
+      </div>
+
+      <!-- DAY 1 -->
+      <article class="glass-panel glass-panel-hover p-6 sm:p-8 rounded-3xl space-y-4 border-l-4 border-l-holiday-red">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-xs font-bold px-3 py-1 rounded-lg bg-holiday-red/20 text-holiday-goldLight border border-holiday-red/30">
+            DAY 01
+          </span>
+          <span class="text-xs text-gray-400 font-medium">Icebreaking & Problem Identification</span>
+        </div>
+
+        <h3 class="text-xl font-bold text-white">
+          Breaking the Ice and Getting to Know Each Other
+        </h3>
+
+        <p class="text-sm text-gray-300 leading-relaxed">
+          The first day was all about getting comfortable in a new environment and interacting with new people. We participated in several interesting games and activities that helped us introduce ourselves and build connections.
+        </p>
+
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 text-xs sm:text-sm text-gray-300 space-y-2">
+          <div class="flex items-center gap-2 text-holiday-gold font-semibold">
+            <i class="fa-solid fa-lightbulb"></i>
+            <span>Key Activity: Problem Identification</span>
+          </div>
+          <p class="text-gray-400">
+            We identified three problem statements that we were facing in our daily contexts, which encouraged us to start thinking critically about real-world problems and possible practical solutions.
+          </p>
+        </div>
+      </article>
+
+      <!-- DAY 2 -->
+      <article class="glass-panel glass-panel-hover p-6 sm:p-8 rounded-3xl space-y-4 border-l-4 border-l-blue-400">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-xs font-bold px-3 py-1 rounded-lg bg-blue-500/20 text-blue-300 border border-blue-400/30">
+            DAY 02
+          </span>
+          <span class="text-xs text-gray-400 font-medium">Self-Discovery & Professional Identity</span>
+        </div>
+
+        <h3 class="text-xl font-bold text-white">
+          Understanding Myself Better
+        </h3>
+
+        <p class="text-sm text-gray-300 leading-relaxed">
+          On the second day, we had a LinkedIn orientation that helped us understand how to build our professional identity and present our career aspirations effectively.
+        </p>
+
+        <div class="p-4 rounded-2xl bg-blue-500/10 border border-blue-400/20 text-xs sm:text-sm text-gray-200 space-y-2">
+          <div class="flex items-center gap-2 text-blue-300 font-bold">
+            <i class="fa-solid fa-user-astronaut"></i>
+            <span>16 Personalities Discovery: Protagonist (ENFJ)</span>
+          </div>
+          <p class="text-gray-300">
+            I took the 16 Personalities assessment and discovered my personality type is <strong>Protagonist (ENFJ)</strong>. As part of the activity, we read a story related to our personality type and shared reflections with peers, allowing me to understand my strengths in leadership, empathy, communication, and collaborative teamwork.
+          </p>
+        </div>
+      </article>
+
+      <!-- DAY 3 -->
+      <article class="glass-panel glass-panel-hover p-6 sm:p-8 rounded-3xl space-y-5 border-l-4 border-l-holiday-mint">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-xs font-bold px-3 py-1 rounded-lg bg-holiday-pine/40 text-holiday-mint border border-holiday-pine">
+            DAY 03
+          </span>
+          <span class="text-xs text-gray-400 font-medium">Team Dynamics & Prototyping</span>
+        </div>
+
+        <h3 class="text-xl font-bold text-white">
+          Team Formation and the Marshmallow Challenge
+        </h3>
+
+        <p class="text-sm text-gray-300 leading-relaxed">
+          The third day was one of the most exciting days because we formed our <strong>Beta teams</strong>. We participated in interactive games such as the <em>Imposter game</em> and other dynamic group challenges.
+        </p>
+
+        <p class="text-sm text-gray-300 leading-relaxed">
+          One of the most memorable activities was the <strong>Marshmallow Challenge</strong>, where we worked with spaghetti, thread, tape, and a marshmallow to build the tallest freestanding structure. The challenge taught us the critical importance of rapid prototyping, communication, creativity, planning, and teamwork under time constraints.
+        </p>
+
+        <!-- Document Photo: Marshmallow Challenge -->
+        <figure class="space-y-2">
+          <div class="overflow-hidden rounded-2xl border border-white/15 bg-black/40 shadow-lg">
+            <img 
+              src="assets/protosem/image1.jpeg" 
+              alt="Team presentation during the Marshmallow Challenge" 
+              class="w-full h-auto max-h-[420px] object-cover hover:scale-[1.01] transition-transform duration-300"
+            >
+          </div>
+          <figcaption class="text-xs text-center text-gray-400 italic">
+            <i class="fa-solid fa-camera mr-1 text-holiday-gold"></i> Team presentation during the Marshmallow Challenge
+          </figcaption>
+        </figure>
+      </article>
+
+      <!-- DAY 4 -->
+      <article class="glass-panel glass-panel-hover p-6 sm:p-8 rounded-3xl space-y-5 border-l-4 border-l-holiday-gold">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-xs font-bold px-3 py-1 rounded-lg bg-holiday-gold/20 text-holiday-gold border border-holiday-gold/30">
+            DAY 04
+          </span>
+          <span class="text-xs text-gray-400 font-medium">Forge Ecosystem & Leadership Vision</span>
+        </div>
+
+        <h3 class="text-xl font-bold text-white">
+          Understanding Forge
+        </h3>
+
+        <p class="text-sm text-gray-300 leading-relaxed">
+          On the fourth day, we had a session with <strong>Hema</strong>, where we learned about the rules, regulations, professional conduct, and expectations of Forge.
+        </p>
+
+        <p class="text-sm text-gray-300 leading-relaxed">
+          In the afternoon, we attended the official orientation of Forge and listened to the special address by <strong>Kumar Rajagopalan</strong>. The session gave us a deep understanding of the organization, its innovation vision, and the vast opportunities available to us as Innovation Engineer Trainees.
+        </p>
+
+        <!-- Document Photos: Forge Orientation & Address -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <figure class="space-y-2">
+            <div class="overflow-hidden rounded-2xl border border-white/15 bg-black/40 shadow-lg">
+              <img 
+                src="assets/protosem/image2.jpeg" 
+                alt="Special address during the Forge orientation" 
+                class="w-full h-48 sm:h-56 object-cover hover:scale-[1.02] transition-transform duration-300"
+              >
+            </div>
+            <figcaption class="text-xs text-center text-gray-400 italic">
+              <i class="fa-solid fa-camera mr-1 text-holiday-gold"></i> Special address during Forge orientation
+            </figcaption>
+          </figure>
+
+          <figure class="space-y-2">
+            <div class="overflow-hidden rounded-2xl border border-white/15 bg-black/40 shadow-lg">
+              <img 
+                src="assets/protosem/image3.jpeg" 
+                alt="Forge orientation session" 
+                class="w-full h-48 sm:h-56 object-cover hover:scale-[1.02] transition-transform duration-300"
+              >
+            </div>
+            <figcaption class="text-xs text-center text-gray-400 italic">
+              <i class="fa-solid fa-camera mr-1 text-holiday-gold"></i> Forge orientation session & cohort
+            </figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <!-- DAY 5 -->
+      <article class="glass-panel glass-panel-hover p-6 sm:p-8 rounded-3xl space-y-5 border-l-4 border-l-purple-400">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-xs font-bold px-3 py-1 rounded-lg bg-purple-500/20 text-purple-300 border border-purple-400/30">
+            DAY 05
+          </span>
+          <span class="text-xs text-gray-400 font-medium">YEP Kickoff & Entrepreneurial Inspiration</span>
+        </div>
+
+        <h3 class="text-xl font-bold text-white">
+          YEP Orientation and Entrepreneurial Inspiration
+        </h3>
+
+        <p class="text-sm text-gray-300 leading-relaxed">
+          The fifth day was another milestone experience as we attended the <strong>YEP (Young Entrepreneurship Program)</strong> orientation. It was also an inspiring <strong>Entrepreneur Day</strong>, where we had the opportunity to listen directly to an entrepreneur share the candid journey of building an organization from scratch.
+        </p>
+
+        <p class="text-sm text-gray-300 leading-relaxed">
+          The session provided valuable first-hand insights into leadership, resilience, problem-solving, market determination, and entrepreneurial mindset.
+        </p>
+
+        <!-- Document Photos: YEP Kickoff & Entrepreneurial Session -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <figure class="space-y-2">
+            <div class="overflow-hidden rounded-2xl border border-white/15 bg-black/40 shadow-lg">
+              <img 
+                src="assets/protosem/image4.jpeg" 
+                alt="YEP Kickoff - Batch 2026" 
+                class="w-full h-48 sm:h-56 object-cover hover:scale-[1.02] transition-transform duration-300"
+              >
+            </div>
+            <figcaption class="text-xs text-center text-gray-400 italic">
+              <i class="fa-solid fa-camera mr-1 text-holiday-gold"></i> YEP Kickoff — Batch 2026
+            </figcaption>
+          </figure>
+
+          <figure class="space-y-2">
+            <div class="overflow-hidden rounded-2xl border border-white/15 bg-black/40 shadow-lg">
+              <img 
+                src="assets/protosem/image5.jpeg" 
+                alt="Entrepreneurial session and audience" 
+                class="w-full h-48 sm:h-56 object-cover hover:scale-[1.02] transition-transform duration-300"
+              >
+            </div>
+            <figcaption class="text-xs text-center text-gray-400 italic">
+              <i class="fa-solid fa-camera mr-1 text-holiday-gold"></i> Entrepreneurial session & cohort interaction
+            </figcaption>
+          </figure>
+        </div>
+      </article>
+
+    </section>
+
+
+    <!-- Key Takeaways & Learnings -->
+    <section class="glass-panel p-8 sm:p-10 rounded-3xl space-y-6 border-holiday-gold/30">
+      <div class="flex items-center gap-3">
+        <span class="text-holiday-gold text-xl"><i class="fa-solid fa-award"></i></span>
+        <h2 class="text-2xl font-bold text-white">What I Learned From My First Week</h2>
+      </div>
+
+      <p class="text-sm sm:text-base text-gray-300 leading-relaxed">
+        Looking back at my first week at Protosem, I feel that it was much more than an orientation program. Every activity had a purpose. I learned how important it is to communicate with new people, understand myself better, work effectively as part of a team, and approach problems creatively.
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1.5">
+          <div class="flex items-center gap-2 text-holiday-gold font-bold text-sm">
+            <i class="fa-solid fa-users"></i>
+            <span>Team Collaboration</span>
+          </div>
+          <p class="text-xs text-gray-300">
+            Forming Beta teams and solving the Marshmallow Challenge reinforced collective brainstorming and mutual support.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1.5">
+          <div class="flex items-center gap-2 text-holiday-mint font-bold text-sm">
+            <i class="fa-solid fa-id-card"></i>
+            <span>Self-Awareness (ENFJ)</span>
+          </div>
+          <p class="text-xs text-gray-300">
+            Understanding my Protagonist personality type helped clarify my strengths in communication and empathy.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1.5">
+          <div class="flex items-center gap-2 text-blue-300 font-bold text-sm">
+            <i class="fa-solid fa-gears"></i>
+            <span>Hands-on Problem Solving</span>
+          </div>
+          <p class="text-xs text-gray-300">
+            Real learning happens beyond textbooks—through rapid prototyping, creative constraints, and experimentation.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1.5">
+          <div class="flex items-center gap-2 text-purple-300 font-bold text-sm">
+            <i class="fa-solid fa-rocket"></i>
+            <span>Entrepreneurial Mindset</span>
+          </div>
+          <p class="text-xs text-gray-300">
+            Listening to founder journeys inspired resilience, customer-centric problem solving, and long-term vision.
+          </p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Concluding Reflection -->
+    <section class="glass-panel p-8 sm:p-10 rounded-3xl text-center space-y-4 border-holiday-red/30">
+      <span class="text-xs font-bold uppercase tracking-widest text-holiday-gold">Closing Reflection</span>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-white">A Week to Remember</h2>
+      <p class="text-sm sm:text-base text-gray-300 max-w-2xl mx-auto leading-relaxed">
+        My first week at Protosem was filled with new people, new challenges, new ideas, and new learning experiences. From ice-breaking games and personality discovery to team challenges, Forge orientation, and entrepreneurial sessions, every day added something new to my journey. Week Zero gave me a strong foundation, and I am excited to see what the coming weeks bring.
+      </p>
+
+      <div class="pt-6 flex flex-wrap items-center justify-center gap-4">
+        <a href="index.html#protosem" class="px-6 py-3 rounded-xl bg-holiday-red hover:bg-holiday-darkRed text-white font-bold text-xs transition-all shadow-lg flex items-center gap-2">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Return to ProtoSem Archive</span>
+        </a>
+        <a href="resume.html" class="px-6 py-3 rounded-xl glass-panel text-holiday-gold hover:text-white border border-holiday-gold/30 font-bold text-xs transition-all flex items-center gap-2">
+          <i class="fa-solid fa-file-invoice"></i>
+          <span>View ATS Resume</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- Footer -->
+  <footer class="border-t border-white/10 py-8 px-4 text-center text-xs text-gray-400 space-y-2">
+    <p>Rithika H • PRICE ProtoSem 20-Week Innovation Programme Journal</p>
+    <p class="text-gray-500 text-[11px]">© 2026 Rithika H. Crafted with festive elegance & precision.</p>
+  </footer>
+
+
+  <!-- Snow Particles Canvas Script -->
+  <script>
+    (function initSnow() {
+      const canvas = document.getElementById('snow-canvas');
+      const ctx = canvas.getContext('2d');
+      let width = (canvas.width = window.innerWidth);
+      let height = (canvas.height = window.innerHeight);
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      const particleCount = 55;
+      const particles = [];
+
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: Math.random() * 2.2 + 0.8,
+          speedY: Math.random() * 0.7 + 0.3,
+          speedX: Math.random() * 0.4 - 0.2,
+          opacity: Math.random() * 0.5 + 0.2
+        });
+      }
+
+      function drawSnow() {
+        ctx.clearRect(0, 0, width, height);
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2, true);
+          ctx.fillStyle = `rgba(240, 248, 255, ${p.opacity})`;
+          ctx.fill();
+
+          p.y += p.speedY;
+          p.x += p.speedX;
+
+          if (p.y > height) {
+            p.y = -5;
+            p.x = Math.random() * width;
+          }
+          if (p.x > width) p.x = 0;
+          if (p.x < 0) p.x = width;
+        }
+        requestAnimationFrame(drawSnow);
+      }
+      drawSnow();
+    })();
+  </script>
+
+</body>
+</html>
