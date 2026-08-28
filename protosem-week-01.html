@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 01 — Design Thinking, Analytics & Practical Innovation | Rithika H</title>
+  <meta name="description" content="My first week at ProtoSem (Week 01): Exploring Design Thinking, Power BI, SWOT Analysis, Prospect Theory, Instagram Algorithms, and a Pharmacy-Sector Applied Project by Rithika H.">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Cinzel:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            festive: ['Cinzel', 'serif']
+          },
+          colors: {
+            holiday: {
+              red: '#c1121f',
+              darkRed: '#780000',
+              emerald: '#1b4332',
+              pine: '#2d6a4f',
+              mint: '#52b788',
+              gold: '#e0a96d',
+              goldLight: '#f3d5b5',
+              darkBg: '#09130e',
+              cardBg: 'rgba(18, 38, 29, 0.7)',
+              glassBorder: 'rgba(243, 213, 181, 0.15)'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #09130e;
+      color: #f1faee;
+      overflow-x: hidden;
+    }
+
+    .glass-panel {
+      background: rgba(14, 31, 23, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(224, 169, 109, 0.18);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .glass-panel-hover {
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-panel-hover:hover {
+      transform: translateY(-3px);
+      border-color: rgba(82, 183, 136, 0.4);
+      box-shadow: 0 12px 35px 0 rgba(45, 106, 79, 0.25), 0 0 20px rgba(82, 183, 136, 0.15);
+    }
+
+    .glow-blob {
+      filter: blur(80px);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    #snow-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 40;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #09130e;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2d6a4f;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #52b788;
+    }
+  </style>
+</head>
+
+<body class="font-sans antialiased selection:bg-holiday-mint selection:text-holiday-darkBg">
+
+  <!-- Snow Particles Canvas -->
+  <canvas id="snow-canvas"></canvas>
+
+  <!-- Ambient Glow Blobs -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+    <div class="glow-blob absolute -top-24 -left-20 w-96 h-96 rounded-full bg-holiday-pine"></div>
+    <div class="glow-blob absolute top-1/2 -right-24 w-[30rem] h-[30rem] rounded-full bg-holiday-emerald"></div>
+    <div class="glow-blob absolute bottom-10 left-1/3 w-96 h-96 rounded-full bg-holiday-darkRed"></div>
+  </div>
+
+  <!-- Top Sticky Navigation Bar -->
+  <header class="fixed top-0 left-0 right-0 z-50 px-4 py-3">
+    <nav class="max-w-4xl mx-auto glass-panel rounded-2xl px-5 py-3 flex items-center justify-between">
+      <!-- Back to Portfolio Link -->
+      <a href="index.html#protosem" class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-300 hover:text-holiday-mint transition-colors group">
+        <span class="w-7 h-7 rounded-lg bg-white/5 group-hover:bg-holiday-pine flex items-center justify-center transition-colors">
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+        </span>
+        <span>Back to Portfolio</span>
+      </a>
+
+      <!-- Breadcrumbs -->
+      <div class="hidden sm:flex items-center gap-2 text-xs">
+        <a href="protosem-week-00.html" class="text-gray-400 hover:text-holiday-gold transition-colors">Week 00</a>
+        <span class="text-gray-600">/</span>
+        <span class="font-bold px-2.5 py-1 rounded-full bg-holiday-pine/40 text-holiday-mint border border-holiday-pine">
+          Week 01
+        </span>
+      </div>
+
+      <!-- Action Links -->
+      <div class="flex items-center gap-3">
+        <a href="resume.html" class="px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-holiday-mint/20 text-holiday-mint border border-holiday-mint/30 hover:bg-holiday-mint hover:text-holiday-darkBg transition-all flex items-center gap-1.5">
+          <i class="fa-solid fa-file-invoice"></i>
+          <span>ATS Resume</span>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Article Container -->
+  <main class="relative z-10 pt-28 pb-20 px-4 max-w-4xl mx-auto space-y-12">
+
+    <!-- Article Header / Hero Banner -->
+    <header class="glass-panel p-8 sm:p-12 rounded-3xl space-y-6 border-holiday-mint/30 relative overflow-hidden">
+      <div class="glow-blob absolute -top-12 -right-12 w-64 h-64 bg-holiday-mint/20 rounded-full"></div>
+
+      <!-- Metadata Badges -->
+      <div class="relative z-10 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2">
+          <span class="px-3 py-1 rounded-full bg-holiday-pine/40 text-holiday-mint font-bold border border-holiday-pine uppercase tracking-wider">
+            Phase 01 • Week 01
+          </span>
+          <span class="px-3 py-1 rounded-full bg-holiday-gold/15 text-holiday-gold font-semibold border border-holiday-gold/30">
+            <i class="fa-solid fa-cube mr-1"></i> Technical Immersion & Ideation
+          </span>
+        </div>
+        <span class="text-gray-400 font-mono flex items-center gap-1.5">
+          <i class="fa-regular fa-clock"></i> 4 min read
+        </span>
+      </div>
+
+      <!-- Article Title & Subtitle -->
+      <div class="relative z-10 space-y-3">
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+          My First Week at ProTosem
+        </h1>
+        <p class="text-lg sm:text-xl text-holiday-mint font-medium leading-relaxed">
+          Week One — Design Thinking, Analytics, and Practical Innovation
+        </p>
+      </div>
+
+      <!-- Author Bio Byline -->
+      <div class="relative z-10 pt-4 border-t border-white/10 flex items-center gap-3">
+        <img 
+          src="https://ui-avatars.com/api/?name=Rithika+H&background=2d6a4f&color=52b788&size=96&bold=true" 
+          alt="Rithika H" 
+          class="w-11 h-11 rounded-full border border-holiday-mint/40 shadow"
+        >
+        <div>
+          <div class="text-sm font-bold text-white">Rithika H</div>
+          <div class="text-xs text-gray-400">Innovation Engineer Trainee • PRICE ProtoSem (Batch 2026)</div>
+        </div>
+      </div>
+    </header>
+
+
+    <!-- Executive Summary / Lead Narrative -->
+    <section class="glass-panel p-6 sm:p-8 rounded-3xl border-l-4 border-l-holiday-mint space-y-4">
+      <h2 class="text-xs font-bold text-holiday-mint uppercase tracking-widest flex items-center gap-2">
+        <i class="fa-solid fa-compass"></i>
+        <span>Weekly Reflection & Overview</span>
+      </h2>
+      <p class="text-sm sm:text-base text-gray-200 leading-relaxed">
+        My first week at ProTosem was an exciting journey filled with learning, creativity, and new experiences. We explored topics like <strong>Instagram algorithms</strong>, <strong>Design Thinking</strong>, <strong>Power BI</strong>, <strong>SWOT analysis</strong>, <strong>Prospect Theory</strong>, <strong>portfolio building</strong>, and <strong>application development</strong>.
+      </p>
+      <p class="text-sm sm:text-base text-gray-300 leading-relaxed">
+        Our <strong>pharmacy-sector project</strong> helped us apply these concepts through teamwork and practical activities. We also gained valuable insights from our mentors and alumni about career paths and future opportunities. Overall, the week helped me think differently, learn practically, and discover new perspectives.
+      </p>
+    </section>
+
+
+    <!-- Core Knowledge Pillars Explored -->
+    <section class="space-y-6">
+      
+      <div class="flex items-center gap-3 mb-2">
+        <span class="text-holiday-mint text-xl"><i class="fa-solid fa-layer-group"></i></span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Key Topics & Frameworks Explored</h2>
+        <div class="flex-grow h-px bg-gradient-to-r from-holiday-mint/40 to-transparent"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        
+        <!-- Topic 1: Design Thinking & App Dev -->
+        <article class="glass-panel glass-panel-hover p-6 rounded-3xl space-y-3 border-l-4 border-l-holiday-mint">
+          <div class="w-10 h-10 rounded-xl bg-holiday-pine/40 text-holiday-mint flex items-center justify-center text-lg">
+            <i class="fa-solid fa-lightbulb"></i>
+          </div>
+          <h3 class="text-lg font-bold text-white">Design Thinking & App Development</h3>
+          <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+            Learned human-centric design methodologies: empathizing with end-users, defining core pain points, rapid prototyping, and conceptualizing software solutions that solve real industry problems.
+          </p>
+        </article>
+
+        <!-- Topic 2: Power BI & Data Analytics -->
+        <article class="glass-panel glass-panel-hover p-6 rounded-3xl space-y-3 border-l-4 border-l-blue-400">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-300 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-chart-pie"></i>
+          </div>
+          <h3 class="text-lg font-bold text-white">Power BI & Business Intelligence</h3>
+          <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+            Explored data visualization tools to transform complex business information into intuitive interactive dashboards for commercial and operational insights.
+          </p>
+        </article>
+
+        <!-- Topic 3: SWOT & Prospect Theory -->
+        <article class="glass-panel glass-panel-hover p-6 rounded-3xl space-y-3 border-l-4 border-l-holiday-gold">
+          <div class="w-10 h-10 rounded-xl bg-holiday-gold/20 text-holiday-gold flex items-center justify-center text-lg">
+            <i class="fa-solid fa-chess"></i>
+          </div>
+          <h3 class="text-lg font-bold text-white">SWOT Analysis & Prospect Theory</h3>
+          <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+            Delved into behavioral economics and strategic risk management—analyzing how psychological biases and market risks shape consumer behavior and organizational decision-making.
+          </p>
+        </article>
+
+        <!-- Topic 4: Digital Branding & Algorithms -->
+        <article class="glass-panel glass-panel-hover p-6 rounded-3xl space-y-3 border-l-4 border-l-purple-400">
+          <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-300 flex items-center justify-center text-lg">
+            <i class="fa-brands fa-instagram"></i>
+          </div>
+          <h3 class="text-lg font-bold text-white">Instagram Algorithms & Portfolio Building</h3>
+          <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+            Examined social media distribution algorithms, personal branding strategies, and professional web portfolio curation to showcase innovation projects to employers and founders.
+          </p>
+        </article>
+
+      </div>
+    </section>
+
+
+    <!-- Applied Sector Project -->
+    <section class="glass-panel p-8 sm:p-10 rounded-3xl space-y-6 border-holiday-mint/30 relative overflow-hidden">
+      <div class="glow-blob absolute -bottom-10 -right-10 w-48 h-48 bg-holiday-pine rounded-full"></div>
+
+      <div class="relative z-10 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <span class="w-8 h-8 rounded-lg bg-holiday-mint/20 text-holiday-mint flex items-center justify-center text-sm">
+            <i class="fa-solid fa-prescription-bottle-medical"></i>
+          </span>
+          <span class="text-xs font-bold uppercase tracking-wider text-holiday-mint">Hands-On Application</span>
+        </div>
+        <span class="text-xs px-3 py-1 rounded-full bg-white/5 text-gray-300 border border-white/10 font-mono">
+          Team Innovation Project
+        </span>
+      </div>
+
+      <div class="relative z-10 space-y-3">
+        <h3 class="text-2xl font-bold text-white">Pharmacy-Sector Applied Project</h3>
+        <p class="text-sm sm:text-base text-gray-300 leading-relaxed">
+          We bridged theoretical concepts with real-world practice by tackling challenges in the <strong>pharmacy and healthcare retail sector</strong>. Applying SWOT analysis and Design Thinking frameworks, our team collaborated on mapping customer journeys, identifying supply chain bottlenecks, and designing structured digital workflows.
+        </p>
+      </div>
+
+      <div class="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+        <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-center">
+          <div class="text-xs font-bold text-holiday-mint">Empathy Mapping</div>
+          <div class="text-[11px] text-gray-400 mt-1">Understanding pharmacy retail consumers</div>
+        </div>
+        <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-center">
+          <div class="text-xs font-bold text-holiday-gold">Strategic SWOT</div>
+          <div class="text-[11px] text-gray-400 mt-1">Evaluating market risks and opportunities</div>
+        </div>
+        <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-center">
+          <div class="text-xs font-bold text-blue-300">Solution Modeling</div>
+          <div class="text-[11px] text-gray-400 mt-1">Prototyping practical application features</div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Mentor & Alumni Guidance -->
+    <section class="glass-panel p-8 sm:p-10 rounded-3xl space-y-5 border-holiday-gold/30">
+      <div class="flex items-center gap-3">
+        <span class="text-holiday-gold text-xl"><i class="fa-solid fa-graduation-cap"></i></span>
+        <h3 class="text-xl sm:text-2xl font-bold text-white">Mentorship & Alumni Career Perspectives</h3>
+      </div>
+
+      <p class="text-sm text-gray-300 leading-relaxed">
+        Beyond technical modules, we had the privilege of engaging with experienced mentors and ProtoSem alumni. They shared actionable advice regarding career trajectories, technological convergence in commerce and finance, and how to maximize the 20-week innovation journey.
+      </p>
+
+      <div class="p-4 rounded-2xl bg-holiday-gold/10 border border-holiday-gold/20 text-xs sm:text-sm text-gray-200 flex items-start gap-3">
+        <i class="fa-solid fa-quote-left text-holiday-gold text-lg mt-0.5"></i>
+        <p class="italic text-gray-300 leading-relaxed">
+          "The mentorship interactions opened my eyes to diverse career pathways, reminding us that continuous curiosity and multidisciplinary skills are key to building impactful solutions."
+        </p>
+      </div>
+    </section>
+
+
+    <!-- Synthesis & Navigation Links -->
+    <section class="glass-panel p-8 sm:p-10 rounded-3xl text-center space-y-6 border-holiday-mint/30">
+      <div class="space-y-2">
+        <span class="text-xs font-bold uppercase tracking-widest text-holiday-mint">Weekly Synthesis</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Looking Ahead to Week Two</h2>
+        <p class="text-sm text-gray-300 max-w-xl mx-auto leading-relaxed">
+          Week One gave me the tools to think differently, learn practically, and discover new perspectives. Ready to dive deeper into product development and innovation!
+        </p>
+      </div>
+
+      <div class="pt-4 flex flex-wrap items-center justify-center gap-4">
+        <a href="protosem-week-00.html" class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs transition-all flex items-center gap-2">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Read Week 00 (Chapter 00)</span>
+        </a>
+        <a href="index.html#protosem" class="px-6 py-2.5 rounded-xl bg-holiday-pine hover:bg-holiday-emerald text-white font-bold text-xs transition-all shadow-lg flex items-center gap-2">
+          <i class="fa-solid fa-table-cells"></i>
+          <span>Return to ProtoSem Archive</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- Footer -->
+  <footer class="border-t border-white/10 py-8 px-4 text-center text-xs text-gray-400 space-y-2">
+    <p>Rithika H • PRICE ProtoSem 20-Week Innovation Programme Journal</p>
+    <p class="text-gray-500 text-[11px]">© 2026 Rithika H. Crafted with festive elegance & precision.</p>
+  </footer>
+
+
+  <!-- Snow Particles Canvas Script -->
+  <script>
+    (function initSnow() {
+      const canvas = document.getElementById('snow-canvas');
+      const ctx = canvas.getContext('2d');
+      let width = (canvas.width = window.innerWidth);
+      let height = (canvas.height = window.innerHeight);
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      const particleCount = 55;
+      const particles = [];
+
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: Math.random() * 2.2 + 0.8,
+          speedY: Math.random() * 0.7 + 0.3,
+          speedX: Math.random() * 0.4 - 0.2,
+          opacity: Math.random() * 0.5 + 0.2
+        });
+      }
+
+      function drawSnow() {
+        ctx.clearRect(0, 0, width, height);
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2, true);
+          ctx.fillStyle = `rgba(240, 248, 255, ${p.opacity})`;
+          ctx.fill();
+
+          p.y += p.speedY;
+          p.x += p.speedX;
+
+          if (p.y > height) {
+            p.y = -5;
+            p.x = Math.random() * width;
+          }
+          if (p.x > width) p.x = 0;
+          if (p.x < 0) p.x = width;
+        }
+        requestAnimationFrame(drawSnow);
+      }
+      drawSnow();
+    })();
+  </script>
+
+</body>
+</html>
