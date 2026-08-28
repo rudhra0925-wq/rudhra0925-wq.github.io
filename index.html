@@ -1402,16 +1402,20 @@
                     ${weekOneContent.paragraphs.map(p => `<p class="leading-relaxed">${p}</p>`).join('')}
                   </div>
 
-                  <div class="pt-3 border-t border-white/10">
-                    <div class="text-[11px] font-bold uppercase tracking-wider text-holiday-mint mb-2">Key Skills & Projects Explored:</div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      ${weekOneContent.takeaways.map(t => `
-                        <div class="flex items-center gap-2 p-2 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-300">
-                          <i class="fa-solid fa-check text-holiday-mint text-xs"></i>
-                          <span>${t}</span>
-                        </div>
-                      `).join('')}
-                    </div>
+                  <div class="pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
+                    <div class="text-[11px] font-bold uppercase tracking-wider text-holiday-mint">Key Skills & Projects Explored:</div>
+                    <a href="protosem-week-01.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-holiday-pine hover:bg-holiday-emerald text-white font-bold text-xs transition-all shadow-md">
+                      <span>Read Dedicated Article Page</span>
+                      <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </a>
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    ${weekOneContent.takeaways.map(t => `
+                      <div class="flex items-center gap-2 p-2 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-300">
+                        <i class="fa-solid fa-check text-holiday-mint text-xs"></i>
+                        <span>${t}</span>
+                      </div>
+                    `).join('')}
                   </div>
                 </div>
               `;
