@@ -1185,22 +1185,21 @@
       };
 
       const weekOneContent = {
-        title: "Week One – Design Thinking, Analytics & Practical Innovation",
+        title: "Week One – A Journey of Learning, Creativity and New Perspectives",
         paragraphs: [
-          "My first week at ProTosem was an exciting journey filled with learning, creativity, and new experiences.",
-          "We explored topics like Instagram algorithms, Design Thinking, Power BI, SWOT analysis, Prospect Theory, portfolio building, and application development.",
-          "Our pharmacy-sector project helped us apply these concepts through teamwork and practical activities.",
-          "We also gained valuable insights from our mentors and alumni about career paths and future opportunities.",
-          "Overall, the week helped me think differently, learn practically, and discover new perspectives."
+          "Week One at Protosem was an exciting journey filled with technology, creativity, teamwork, industry exploration, and practical learning.",
+          "Every session introduced us to a new idea and encouraged us to connect what we learned with real-world situations.",
+          "From understanding how Instagram works to exploring the pharmacy industry, learning Power BI, studying Prospect Theory, building a portfolio, developing an application, and thinking about our future vision, the week gave me many valuable experiences."
         ],
         takeaways: [
-          "Design Thinking & App Development",
-          "Power BI & SWOT Analysis",
-          "Prospect Theory & Market Behavior",
-          "Pharmacy-Sector Applied Project",
-          "Instagram Algorithms & Portfolio Building",
-          "Mentor & Alumni Career Guidance"
-        ]
+          "Instagram Feed Algorithms & Tech Talk",
+          "Design Thinking (30 Circles & Pharmacy Poster)",
+          "Power BI & Value Chain SWOT Presentation",
+          "Prospect Theory & Antigravity Portfolio",
+          "Base44 Prompt-Driven App Development",
+          "Vision Session & Alumni Interactions"
+        ],
+        articleLink: "protosem-week-01.html"
       };
 
       const protoSemWeeks = Array.from({ length: 20 }, (_, i) => {
@@ -1314,12 +1313,13 @@
               </div>
 
               <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
-                <span class="text-[11px] font-bold ${item.isWeekZero ? 'text-holiday-gold' : 'text-holiday-mint'} flex items-center gap-1.5">
-                  <i class="fa-solid fa-book-open text-xs"></i>
-                  <span>Read Full Description</span>
-                </span>
+                <a href="${item.isWeekZero ? 'protosem-week-00.html' : 'protosem-week-01.html'}" class="text-[11px] font-bold ${item.isWeekZero ? 'text-holiday-gold hover:text-white' : 'text-holiday-mint hover:text-white'} flex items-center gap-1.5 py-1 px-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-colors" onclick="event.stopPropagation()">
+                  <i class="fa-solid fa-file-lines text-xs"></i>
+                  <span>Read Full Blog & Photos</span>
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[9px] ml-0.5"></i>
+                </a>
                 <span class="${item.isWeekZero ? 'text-holiday-gold' : 'text-holiday-mint'} group-hover:translate-x-1.5 transition-transform flex items-center gap-1 font-semibold text-xs">
-                  <span>Explore</span>
+                  <span>Quick View</span>
                   <i class="fa-solid fa-arrow-right text-[10px]"></i>
                 </span>
               </div>
@@ -1402,16 +1402,20 @@
                     ${weekOneContent.paragraphs.map(p => `<p class="leading-relaxed">${p}</p>`).join('')}
                   </div>
 
-                  <div class="pt-3 border-t border-white/10">
-                    <div class="text-[11px] font-bold uppercase tracking-wider text-holiday-mint mb-2">Key Topics Explored:</div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      ${weekOneContent.takeaways.map(t => `
-                        <div class="flex items-center gap-2 p-2 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-300">
-                          <i class="fa-solid fa-check text-holiday-mint text-xs"></i>
-                          <span>${t}</span>
-                        </div>
-                      `).join('')}
-                    </div>
+                  <div class="pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
+                    <div class="text-[11px] font-bold uppercase tracking-wider text-holiday-mint">Key Topics Explored:</div>
+                    <a href="protosem-week-01.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-holiday-pine hover:bg-holiday-emerald text-white font-bold text-xs transition-all shadow-md">
+                      <span>View Full Week 01 Blog & Photos</span>
+                      <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </a>
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    ${weekOneContent.takeaways.map(t => `
+                      <div class="flex items-center gap-2 p-2 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-300">
+                        <i class="fa-solid fa-check text-holiday-mint text-xs"></i>
+                        <span>${t}</span>
+                      </div>
+                    `).join('')}
                   </div>
                 </div>
               `;
