@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareConnect — Mobile App, Working Process & App Scanner | MIT App Inventor</title>
+  <meta name="description" content="CareConnect is a 3-screen community welfare mobile application built with MIT App Inventor covering Animal Welfare, Food Distribution, and Environment. Explore the working process, test the interactive mobile app simulator, and use the App Scanner.">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          colors: {
+            holiday: {
+              red: '#c1121f',
+              darkRed: '#780000',
+              emerald: '#1b4332',
+              pine: '#2d6a4f',
+              mint: '#52b788',
+              gold: '#e0a96d',
+              goldLight: '#f3d5b5',
+              darkBg: '#09130e',
+              cardBg: 'rgba(18, 38, 29, 0.75)',
+              glassBorder: 'rgba(243, 213, 181, 0.15)'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #09130e;
+      color: #f1faee;
+      overflow-x: hidden;
+    }
+
+    .glass-panel {
+      background: rgba(14, 31, 23, 0.78);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(224, 169, 109, 0.18);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .glass-panel-hover {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-panel-hover:hover {
+      transform: translateY(-2px);
+      border-color: rgba(82, 183, 136, 0.4);
+      box-shadow: 0 12px 30px 0 rgba(45, 106, 79, 0.25);
+    }
+
+    .glow-blob {
+      filter: blur(80px);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    /* Mobile chassis styling */
+    .phone-chassis {
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 0 10px #1e293b, 0 0 0 13px #334155;
+      border-radius: 44px;
+    }
+
+    /* Custom App Scrollbar */
+    .app-screen-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+    .app-screen-scroll::-webkit-scrollbar-track {
+      background: rgba(0,0,0,0.2);
+    }
+    .app-screen-scroll::-webkit-scrollbar-thumb {
+      background: rgba(82, 183, 136, 0.3);
+      border-radius: 4px;
+    }
+
+    /* Scanner Viewfinder Animation */
+    .scanner-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #52b788, #e0a96d, #52b788, transparent);
+      box-shadow: 0 0 12px #52b788;
+      animation: scanAnim 2.2s infinite ease-in-out;
+    }
+    @keyframes scanAnim {
+      0% { top: 5%; opacity: 0; }
+      15% { opacity: 1; }
+      85% { opacity: 1; }
+      100% { top: 92%; opacity: 0; }
+    }
+
+    #snow-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 10;
+    }
+  </style>
+</head>
+
+<body class="font-sans antialiased selection:bg-holiday-mint selection:text-holiday-darkBg">
+
+  <!-- Interactive Falling Snow Particles Canvas -->
+  <canvas id="snow-canvas"></canvas>
+
+  <!-- Ambient Glow Blobs -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+    <div class="glow-blob absolute -top-24 -left-20 w-96 h-96 rounded-full bg-holiday-pine"></div>
+    <div class="glow-blob absolute top-1/2 -right-24 w-[30rem] h-[30rem] rounded-full bg-holiday-emerald"></div>
+    <div class="glow-blob absolute bottom-10 left-1/3 w-96 h-96 rounded-full bg-blue-900/30"></div>
+  </div>
+
+  <!-- Top Sticky Navigation Bar -->
+  <header class="fixed top-0 left-0 right-0 z-50 px-4 py-3">
+    <nav class="max-w-7xl mx-auto glass-panel rounded-2xl px-5 py-3 flex items-center justify-between">
+      <!-- Back to Portfolio Link -->
+      <a href="index.html#protosem" class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-300 hover:text-holiday-mint transition-colors group">
+        <span class="w-7 h-7 rounded-lg bg-white/5 group-hover:bg-holiday-pine flex items-center justify-center transition-colors">
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+        </span>
+        <span>Back to Portfolio</span>
+      </a>
+
+      <!-- Quick Nav Links -->
+      <div class="hidden md:flex items-center gap-4 text-xs font-semibold">
+        <a href="#simulator" class="text-gray-300 hover:text-holiday-mint transition-colors flex items-center gap-1.5">
+          <i class="fa-solid fa-mobile-screen"></i> <span>Live App Simulator</span>
+        </a>
+        <a href="#scanner" class="text-gray-300 hover:text-holiday-gold transition-colors flex items-center gap-1.5">
+          <i class="fa-solid fa-qrcode"></i> <span>App Scanner</span>
+        </a>
+        <a href="#working-process" class="text-gray-300 hover:text-holiday-mint transition-colors flex items-center gap-1.5">
+          <i class="fa-solid fa-gears"></i> <span>Working Process</span>
+        </a>
+      </div>
+
+      <!-- Action Links -->
+      <div class="flex items-center gap-2.5">
+        <button onclick="openModal('modal-app-scanner')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl bg-holiday-mint/20 text-holiday-mint border border-holiday-mint/40 hover:bg-holiday-mint hover:text-holiday-darkBg transition-all flex items-center gap-1.5 shadow">
+          <i class="fa-solid fa-qrcode"></i>
+          <span>App Scanner</span>
+        </button>
+        <a href="CareConnect.aia" download="CareConnect.aia" class="px-3.5 py-1.5 text-xs font-bold rounded-xl bg-holiday-gold text-holiday-darkBg hover:bg-holiday-goldLight transition-all flex items-center gap-1.5 shadow-md">
+          <i class="fa-solid fa-download"></i>
+          <span class="hidden sm:inline">Download .aia</span>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Container -->
+  <main class="relative z-10 pt-24 pb-20 px-4 max-w-7xl mx-auto space-y-12">
+
+    <!-- Hero Header & Quick Action Banner -->
+    <section class="glass-panel p-6 sm:p-10 rounded-3xl space-y-4 border-holiday-mint/30 relative overflow-hidden">
+      <div class="glow-blob absolute -top-12 -right-12 w-64 h-64 bg-holiday-mint/20 rounded-full"></div>
+      
+      <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div class="space-y-2 max-w-3xl">
+          <div class="inline-flex items-center gap-2 text-xs font-mono text-holiday-gold">
+            <i class="fa-solid fa-mobile-screen-button"></i>
+            <span>MIT APP INVENTOR MOBILE APP • THREE-SCREEN COMMUNITY SUITE</span>
+          </div>
+          <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+            CareConnect Mobile App
+          </h1>
+          <p class="text-holiday-mint text-base sm:text-lg font-medium">
+            Animal Welfare • Food Distribution • Environment
+          </p>
+          <p class="text-xs sm:text-sm text-gray-300 leading-relaxed pt-1">
+            Experience the complete working mobile application with interactive screens, instant QR code phone launch scanner, live companion testing, and architectural workflow breakdown.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap sm:flex-nowrap lg:flex-col gap-3 min-w-[240px]">
+          <button onclick="openModal('modal-app-scanner')" class="w-full px-5 py-3 rounded-2xl bg-gradient-to-r from-holiday-mint to-teal-500 text-holiday-darkBg font-extrabold text-xs sm:text-sm shadow-xl hover:scale-105 transition-transform flex items-center justify-center gap-2">
+            <i class="fa-solid fa-qrcode text-base"></i>
+            <span>Open Mobile App Scanner</span>
+          </button>
+          <a href="CareConnect.aia" download="CareConnect.aia" class="w-full px-5 py-3 rounded-2xl bg-holiday-gold hover:bg-holiday-goldLight text-holiday-darkBg font-bold text-xs sm:text-sm shadow-lg transition-colors flex items-center justify-center gap-2">
+            <i class="fa-solid fa-file-zipper text-base"></i>
+            <span>Download CareConnect.aia</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==================== SECTION 1: LIVE APP SIMULATOR ==================== -->
+    <section id="simulator" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- Left Column: Interactive Mobile Phone Simulator (5 Cols) -->
+      <div class="lg:col-span-6 flex flex-col items-center">
+        
+        <!-- Phone Device Mockup Container -->
+        <div class="phone-chassis w-full max-w-[370px] h-[720px] bg-[#0b1319] text-white flex flex-col overflow-hidden relative border border-slate-700/50">
+          
+          <!-- Top Phone Speaker & Camera Notch -->
+          <div class="w-full bg-[#0b1319] pt-3 pb-2 px-6 flex items-center justify-between text-[11px] text-gray-300 z-30 select-none">
+            <span class="font-bold font-mono tracking-tight" id="sim-clock">9:41</span>
+            <div class="w-20 h-4 bg-black rounded-full flex items-center justify-center">
+              <div class="w-2.5 h-2.5 rounded-full bg-slate-900 mr-1 border border-slate-700"></div>
+            </div>
+            <div class="flex items-center gap-1.5 text-[10px]">
+              <i class="fa-solid fa-signal"></i>
+              <i class="fa-solid fa-wifi"></i>
+              <i class="fa-solid fa-battery-full text-xs text-holiday-mint"></i>
+            </div>
+          </div>
+
+          <!-- APP SCREEN CONTAINER (DYNAMIC VIEWS) -->
+          <div class="flex-grow overflow-hidden relative flex flex-col bg-[#09130e]">
+
+            <!-- SCREEN 1: HOME -->
+            <div id="screen-home" class="screen-view active w-full h-full flex flex-col absolute inset-0 transition-all duration-300">
+              
+              <!-- Screen Header -->
+              <div class="bg-[#1b4332] px-4 py-3 flex items-center justify-between border-b border-white/10">
+                <div>
+                  <h2 class="text-base font-extrabold text-white flex items-center gap-1.5">
+                    <img src="assets/careconnect/app_icon.jpg" alt="Icon" class="w-5 h-5 rounded-md">
+                    <span>CareConnect</span>
+                  </h2>
+                  <p class="text-[10px] text-holiday-mint font-medium">Small actions. A bigger impact.</p>
+                </div>
+                <button onclick="showNotification('🔔 Notification: 2 local animal rescue drives & 1 food bank nearby!')" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white relative transition-colors">
+                  <i class="fa-regular fa-bell text-xs"></i>
+                  <span class="w-2 h-2 rounded-full bg-holiday-red absolute top-1.5 right-1.5 animate-pulse"></span>
+                </button>
+              </div>
+
+              <!-- Scrollable Content -->
+              <div class="flex-grow overflow-y-auto app-screen-scroll p-3.5 space-y-3 pb-16">
+                
+                <!-- Hero Banner -->
+                <div class="rounded-2xl overflow-hidden relative shadow-md group cursor-pointer" onclick="switchScreen('screen-animal')">
+                  <img src="assets/careconnect/banner_home.jpg" alt="Together for a kinder world" class="w-full h-36 object-cover group-hover:scale-105 transition-transform duration-500">
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
+                    <div>
+                      <span class="text-[9px] font-bold uppercase tracking-wider text-holiday-mint bg-black/40 px-2 py-0.5 rounded backdrop-blur-sm">Featured Mission</span>
+                      <h3 class="text-xs font-bold text-white leading-tight">Together for a kinder world</h3>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider px-1">
+                  Choose a Cause
+                </div>
+
+                <!-- Category 1: Animal Welfare Card -->
+                <div onclick="switchScreen('screen-animal')" class="bg-[#12261d] hover:bg-[#183427] border border-white/10 rounded-2xl p-3 flex items-center justify-between cursor-pointer transition-all hover:border-holiday-mint/50 shadow group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-orange-500/20 text-orange-300 flex items-center justify-center text-lg">
+                      🐾
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-white group-hover:text-holiday-mint transition-colors">Animal Welfare</h4>
+                      <p class="text-[10px] text-gray-400">Help animals in need, spread kindness.</p>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-xs text-gray-500 group-hover:text-white group-hover:translate-x-1 transition-all"></i>
+                </div>
+
+                <!-- Category 2: Food Distribution Card -->
+                <div onclick="switchScreen('screen-food')" class="bg-[#12261d] hover:bg-[#183427] border border-white/10 rounded-2xl p-3 flex items-center justify-between cursor-pointer transition-all hover:border-blue-400/50 shadow group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-blue-500/20 text-blue-300 flex items-center justify-center text-lg">
+                      🥣
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-white group-hover:text-blue-300 transition-colors">Food Distribution</h4>
+                      <p class="text-[10px] text-gray-400">Share food, reduce waste, feed communities.</p>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-xs text-gray-500 group-hover:text-white group-hover:translate-x-1 transition-all"></i>
+                </div>
+
+                <!-- Category 3: Environment Card -->
+                <div onclick="switchScreen('screen-env')" class="bg-[#12261d] hover:bg-[#183427] border border-white/10 rounded-2xl p-3 flex items-center justify-between cursor-pointer transition-all hover:border-green-400/50 shadow group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-green-500/20 text-green-300 flex items-center justify-center text-lg">
+                      🌱
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-white group-hover:text-green-300 transition-colors">Environment</h4>
+                      <p class="text-[10px] text-gray-400">Keep our planet clean, green and healthy.</p>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-xs text-gray-500 group-hover:text-white group-hover:translate-x-1 transition-all"></i>
+                </div>
+
+                <!-- Live Quick Metric Ribbon -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-3 text-center space-y-1">
+                  <div class="text-[10px] text-gray-400">Community Impact Tracker</div>
+                  <div class="text-xs font-bold text-holiday-mint">1,420+ Rescues • 8,900+ Meals • 3,200+ Trees</div>
+                </div>
+
+              </div>
+            </div>
+
+
+            <!-- SCREEN 2: ANIMAL WELFARE -->
+            <div id="screen-animal" class="screen-view hidden w-full h-full flex flex-col absolute inset-0 transition-all duration-300">
+              
+              <!-- Screen Header -->
+              <div class="bg-[#1b4332] px-4 py-3 flex items-center justify-between border-b border-white/10">
+                <div class="flex items-center gap-2">
+                  <button onclick="switchScreen('screen-home')" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors">
+                    <i class="fa-solid fa-arrow-left text-xs"></i>
+                  </button>
+                  <h2 class="text-sm font-bold text-white flex items-center gap-1.5">
+                    <span>Animal Welfare</span>
+                    <span class="text-orange-300">🐾</span>
+                  </h2>
+                </div>
+                <button onclick="openModal('modal-emergency')" class="px-2.5 py-1 rounded-lg bg-holiday-red hover:bg-red-700 text-white text-[10px] font-bold flex items-center gap-1 animate-pulse shadow">
+                  <i class="fa-solid fa-phone"></i>
+                  <span>SOS</span>
+                </button>
+              </div>
+
+              <!-- Scrollable Content -->
+              <div class="flex-grow overflow-y-auto app-screen-scroll p-3.5 space-y-2.5 pb-16">
+                
+                <!-- Hero Banner -->
+                <div class="rounded-2xl overflow-hidden relative shadow-md">
+                  <img src="assets/careconnect/banner_animal.jpg" alt="Help Protect Adopt" class="w-full h-36 object-cover">
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
+                    <h3 class="text-xs font-bold text-white leading-tight">Help • Protect • Adopt 🐾</h3>
+                  </div>
+                </div>
+
+                <!-- Action 1: Report an Animal -->
+                <div onclick="openModal('modal-report-animal')" class="bg-[#12261d] hover:bg-[#183427] border border-white/10 rounded-2xl p-3 flex items-center justify-between cursor-pointer transition-all hover:border-orange-400/50 group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-orange-500/20 text-orange-300 flex items-center justify-center text-sm">
+                      <i class="fa-solid fa-bullhorn"></i>
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-white group-hover:text-orange-300">Report an Animal</h4>
+                      <p class="text-[10px] text-gray-400">Found an injured or stray animal? Let us know.</p>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-xs text-gray-500 group-hover:text-white"></i>
+                </div>
+
+                <!-- Action 2: Donate for Animals -->
+                <div onclick="openModal('modal-donate-animal')" class="bg-[#12261d] hover:bg-[#183427] border border-white/10 rounded-2xl p-3 flex items-center justify-between cursor-pointer transition-all hover:border-green-400/50 group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-green-500/20 text-green-300 flex items-center justify-center text-sm">
+                      <i class="fa-solid fa-hand-holding-heart"></i>
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-white group-hover:text-green-300">Donate for Animals</h4>
+                      <p class="text-[10px] text-gray-400">Support with food, medicine or funds.</p>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-xs text-gray-500 group-hover:text-white"></i>
+                </div>
+
+                <!-- Action 3: Adoption -->
+                <div onclick="openModal('modal-adopt')" class="bg-[#12261d] hover:bg-[#183427] border border-white/10 rounded-2xl p-3 flex items-center justify-between cursor-pointer transition-all hover:border-purple-400/50 group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-300 flex items-center justify-center text-sm">
+                      <i class="fa-solid fa-house-chimney-heart"></i>
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-white group-hover:text-purple-300">Adoption</h4>
+                      <p class="text-[10px] text-gray-400">Give a loving home.</p>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-xs text-gray-500 group-hover:text-white"></i>
+                </div>
+
+                <!-- Action 4: Volunteer -->
+                <div onclick="openModal('modal-volunteer-animal')" class="bg-[#12261d] hover:bg-[#183427] border border-white/10 rounded-2xl p-3 flex items-center justify-between cursor-pointer transition-all hover:border-blue-400/50 group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-300 flex items-center justify-center text-sm">
+                      <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-white group-hover:text-blue-300">Volunteer</h4>
+                      <p class="text-[10px] text-gray-400">Be a part of the change.</p>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-xs text-gray-500 group-hover:text-white"></i>
+                </div>
+
+                <!-- Action 5: Emergency Help -->
+                <div onclick="openModal('modal-emergency')" class="bg-holiday-darkRed/80 hover:bg-holiday-darkRed border border-holiday-red/50 rounded-2xl p-3 flex items-center justify-between cursor-pointer transition-all group shadow">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-holiday-red text-white flex items-center justify-center text-sm animate-pulse">
+                      <i class="fa-solid fa-truck-medical"></i>
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-white">Emergency Help</h4>
+                      <p class="text-[10px] text-red-200">Need urgent assistance? Contact us.</p>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-xs text-white"></i>
+                </div>
+
+              </div>
+            </div>
+
+
+            <!-- SCREEN 3: FOOD DISTRIBUTION -->
+            <div id="screen-food" class="screen-view hidden w-full h-full flex flex-col absolute inset-0 transition-all duration-300">
+              
+              <!-- Screen Header -->
+              <div class="bg-[#1e40af] px-4 py-3 flex items-center justify-between border-b border-white/10">
+                <div class="flex items-center gap-2">
+                  <button onclick="switchScreen('screen-home')" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors">
+                    <i class="fa-solid fa-arrow-left text-xs"></i>
+                  </button>
+                  <h2 class="text-sm font-bold text-white flex items-center gap-1.5">
+                    <span>Food Distribution</span>
+                    <span>🥣</span>
+                  </h2>
+                </div>
+                <button onclick="openModal('modal-donate-food')" class="px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 text-white text-[10px] font-bold flex items-center gap-1">
+                  <i class="fa-solid fa-plus"></i>
+                  <span>Donate</span>
+                </button>
+              </div>
+
+              <!-- Scrollable Content -->
+              <div class="flex-grow overflow-y-auto app-screen-scroll p-3.5 space-y-2.5 pb-16">
+                
+                <!-- Hero Banner -->
+                <div class="rounded-2xl overflow-hidden relative shadow-md">
+                  <img src="assets/careconnect/banner_food.jpg" alt="Good Food Brings People Together" class="w-full h-36 object-cover">
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
+                    <h3 class="text-xs font-bold text-white leading-tight">Good Food Brings People Together ❤️</h3>
+                  </div>
+                </div>
+
+                <!-- Action 1: Donate Food -->
+                <div onclick="openModal('modal-donate-food')" class="bg-[#12261d] hover:bg-[#183427] border border-white/10 rounded-2xl p-3 flex items-center justify-between cursor-pointer transition-all hover:border-blue-400/50 group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-300 flex items-center justify-center text-sm">
+                      <i class="fa-solid fa-utensils"></i>
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-white group-hover:text-blue-300">Donate Food</h4>
+                      <p class="text-[10px] text-gray-400">Share surplus food with those in need.</p>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-xs text-gray-500 group-hover:text-white"></i>
+                </div>
+
+                <!-- Action 2: Request Food -->
+                <div onclick="openModal('modal-request-food')" class="bg-[#12261d] hover:bg-[#183427] border border-white/10 rounded-2xl p-3 flex items-center justify-between cursor-pointer transition-all hover:border-amber-400/50 group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center text-sm">
+                      <i class="fa-solid fa-hand-holding"></i>
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-white group-hover:text-amber-300">Request Food</h4>
+                      <p class="text-[10px] text-gray-400">Get food support when you need it.</p>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-xs text-gray-500 group-hover:text-white"></i>
+                </div>
+
+                <!-- Action 3: Food Donation History -->
+                <div onclick="openModal('modal-food-history')" class="bg-[#12261d] hover:bg-[#183427] border border-white/10 rounded-2xl p-3 flex items-center justify-between cursor-pointer transition-all hover:border-purple-400/50 group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-300 flex items-center justify-center text-sm">
+                      <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-white group-hover:text-purple-300">Food Donation History</h4>
+                      <p class="text-[10px] text-gray-400">View your past donations.</p>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-xs text-gray-500 group-hover:text-white"></i>
+                </div>
+
+                <!-- Action 4: Volunteer -->
+                <div onclick="openModal('modal-volunteer-food')" class="bg-[#12261d] hover:bg-[#183427] border border-white/10 rounded-2xl p-3 flex items-center justify-between cursor-pointer transition-all hover:border-green-400/50 group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-green-500/20 text-green-300 flex items-center justify-center text-sm">
+                      <i class="fa-solid fa-people-carry-box"></i>
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-white group-hover:text-green-300">Volunteer</h4>
+                      <p class="text-[10px] text-gray-400">Join us in food distribution activities.</p>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-xs text-gray-500 group-hover:text-white"></i>
+                </div>
+
+                <!-- Action 5: Food Wastage Report -->
+                <div onclick="openModal('modal-waste-report')" class="bg-[#12261d] hover:bg-[#183427] border border-white/10 rounded-2xl p-3 flex items-center justify-between cursor-pointer transition-all hover:border-red-400/50 group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-red-500/20 text-red-300 flex items-center justify-center text-sm">
+                      <i class="fa-solid fa-trash-can"></i>
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-white group-hover:text-red-300">Food Wastage Report</h4>
+                      <p class="text-[10px] text-gray-400">Report food waste in your area.</p>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-xs text-gray-500 group-hover:text-white"></i>
+                </div>
+
+              </div>
+            </div>
+
+
+            <!-- SCREEN 4: ENVIRONMENT -->
+            <div id="screen-env" class="screen-view hidden w-full h-full flex flex-col absolute inset-0 transition-all duration-300">
+              
+              <!-- Screen Header -->
+              <div class="bg-[#2d6a4f] px-4 py-3 flex items-center justify-between border-b border-white/10">
+                <div class="flex items-center gap-2">
+                  <button onclick="switchScreen('screen-home')" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors">
+                    <i class="fa-solid fa-arrow-left text-xs"></i>
+                  </button>
+                  <h2 class="text-sm font-bold text-white flex items-center gap-1.5">
+                    <span>Environment</span>
+                    <span>🌱</span>
+                  </h2>
+                </div>
+                <button onclick="showNotification('🌿 Plant a sapling to earn 50 Eco-Points!')" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors">
+                  <i class="fa-solid fa-seedling text-xs text-holiday-mint"></i>
+                </button>
+              </div>
+
+              <!-- Scrollable Content -->
+              <div class="flex-grow overflow-y-auto app-screen-scroll p-3.5 space-y-2.5 pb-16">
+                
+                <!-- Hero Banner -->
+                <div class="rounded-2xl overflow-hidden relative shadow-md">
+                  <img src="assets/careconnect/banner_environment.jpg" alt="Keep our planet clean, green and healthy" class="w-full h-36 object-cover">
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3">
+                    <h3 class="text-xs font-bold text-white leading-tight">Clean • Green • Sustainable 🌿</h3>
+                  </div>
+                </div>
+
+                <!-- Action 1: Environmental Report -->
+                <div onclick="openModal('modal-env-report')" class="bg-[#12261d] hover:bg-[#183427] border border-white/10 rounded-2xl p-3 flex items-center justify-between cursor-pointer transition-all hover:border-green-400/50 group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center text-sm">
+                      <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-white group-hover:text-green-300">Environmental Report</h4>
+                      <p class="text-[10px] text-gray-400">Report dumping, pollution or tree cutting.</p>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-xs text-gray-500 group-hover:text-white"></i>
+                </div>
+
+                <!-- Action 2: Cleanup & Green Activities -->
+                <div onclick="openModal('modal-green-activities')" class="bg-[#12261d] hover:bg-[#183427] border border-white/10 rounded-2xl p-3 flex items-center justify-between cursor-pointer transition-all hover:border-green-400/50 group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-green-500/20 text-green-300 flex items-center justify-center text-sm">
+                      <i class="fa-solid fa-tree"></i>
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-white group-hover:text-green-300">Cleanup & Green Activities</h4>
+                      <p class="text-[10px] text-gray-400">Join tree planting & park cleanup drives.</p>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-xs text-gray-500 group-hover:text-white"></i>
+                </div>
+
+                <!-- Action 3: Adopt a Sapling -->
+                <div onclick="openModal('modal-plant-tree')" class="bg-[#12261d] hover:bg-[#183427] border border-white/10 rounded-2xl p-3 flex items-center justify-between cursor-pointer transition-all hover:border-green-400/50 group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-sm">
+                      <i class="fa-solid fa-seedling"></i>
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-white group-hover:text-emerald-300">Adopt a Sapling / Donate</h4>
+                      <p class="text-[10px] text-gray-400">Fund urban greening and saplings.</p>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-xs text-gray-500 group-hover:text-white"></i>
+                </div>
+
+                <!-- Action 4: Eco-Volunteer -->
+                <div onclick="openModal('modal-eco-volunteer')" class="bg-[#12261d] hover:bg-[#183427] border border-white/10 rounded-2xl p-3 flex items-center justify-between cursor-pointer transition-all hover:border-green-400/50 group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-teal-500/20 text-teal-300 flex items-center justify-center text-sm">
+                      <i class="fa-solid fa-hands-holding-circle"></i>
+                    </div>
+                    <div>
+                      <h4 class="text-xs font-bold text-white group-hover:text-teal-300">Eco-Volunteer Corps</h4>
+                      <p class="text-[10px] text-gray-400">Lead campus & neighborhood zero-waste.</p>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-xs text-gray-500 group-hover:text-white"></i>
+                </div>
+
+              </div>
+            </div>
+
+
+            <!-- SCREEN 5: ACTIVITY LOG (TinyDB) -->
+            <div id="screen-activity" class="screen-view hidden w-full h-full flex flex-col absolute inset-0 transition-all duration-300">
+              <div class="bg-[#1b4332] px-4 py-3 flex items-center justify-between border-b border-white/10">
+                <h2 class="text-sm font-bold text-white flex items-center gap-1.5">
+                  <i class="fa-solid fa-clock-rotate-left text-holiday-mint"></i>
+                  <span>Activity & Impact Log</span>
+                </h2>
+                <button onclick="clearActivityLogs()" class="text-[10px] text-gray-300 hover:text-white px-2 py-0.5 rounded bg-white/10">Clear</button>
+              </div>
+              <div class="flex-grow overflow-y-auto app-screen-scroll p-3.5 space-y-2 pb-16" id="activity-list-container">
+                <!-- Dynamically populated from localStorage -->
+              </div>
+            </div>
+
+
+            <!-- SCREEN 6: PROFILE -->
+            <div id="screen-profile" class="screen-view hidden w-full h-full flex flex-col absolute inset-0 transition-all duration-300">
+              <div class="bg-[#1b4332] px-4 py-3 border-b border-white/10 text-center">
+                <h2 class="text-sm font-bold text-white">Community Profile</h2>
+              </div>
+              <div class="flex-grow overflow-y-auto app-screen-scroll p-4 space-y-4 text-center pb-16">
+                <div class="w-16 h-16 rounded-full mx-auto bg-holiday-pine border-2 border-holiday-mint p-1 shadow-lg flex items-center justify-center text-2xl">
+                  👤
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-white">Rithika H</h3>
+                  <p class="text-[11px] text-holiday-mint">Tier: Community Guardian</p>
+                </div>
+                <div class="grid grid-cols-3 gap-2 text-center pt-2">
+                  <div class="bg-white/5 p-2 rounded-xl border border-white/10">
+                    <div class="text-xs font-bold text-holiday-gold">14</div>
+                    <div class="text-[9px] text-gray-400">Actions</div>
+                  </div>
+                  <div class="bg-white/5 p-2 rounded-xl border border-white/10">
+                    <div class="text-xs font-bold text-holiday-mint">350</div>
+                    <div class="text-[9px] text-gray-400">Impact Pts</div>
+                  </div>
+                  <div class="bg-white/5 p-2 rounded-xl border border-white/10">
+                    <div class="text-xs font-bold text-blue-300">5</div>
+                    <div class="text-[9px] text-gray-400">Badges</div>
+                  </div>
+                </div>
+                <div class="p-3 rounded-2xl bg-white/5 border border-white/10 text-left text-xs space-y-2">
+                  <div class="font-bold text-white flex items-center gap-1.5 text-[11px]">
+                    <i class="fa-solid fa-certificate text-holiday-gold"></i>
+                    <span>Volunteering Certifications</span>
+                  </div>
+                  <p class="text-[10px] text-gray-300">Verified participant in Animal Rescue & Surplus Food Logistics 2026.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+          <!-- BOTTOM NAVIGATION BAR (FIXED AT BASE) -->
+          <div class="bg-[#0e1f17] border-t border-white/10 px-4 py-2 flex items-center justify-around z-30 select-none">
+            <button onclick="switchScreen('screen-home')" id="tab-home" class="nav-tab active flex flex-col items-center gap-0.5 text-holiday-mint transition-colors">
+              <i class="fa-solid fa-house text-sm"></i>
+              <span class="text-[10px] font-semibold">Home</span>
+            </button>
+            <button onclick="switchScreen('screen-activity')" id="tab-activity" class="nav-tab flex flex-col items-center gap-0.5 text-gray-400 hover:text-gray-200 transition-colors">
+              <i class="fa-regular fa-heart text-sm"></i>
+              <span class="text-[10px] font-semibold">Activity</span>
+            </button>
+            <button onclick="switchScreen('screen-profile')" id="tab-profile" class="nav-tab flex flex-col items-center gap-0.5 text-gray-400 hover:text-gray-200 transition-colors">
+              <i class="fa-regular fa-user text-sm"></i>
+              <span class="text-[10px] font-semibold">Profile</span>
+            </button>
+          </div>
+
+        </div>
+
+        <p class="text-[11px] text-gray-400 text-center mt-3 flex items-center gap-1.5">
+          <i class="fa-solid fa-hand-pointer text-holiday-mint"></i>
+          <span>Click any card or action button inside the phone to interact live!</span>
+        </p>
+      </div>
+
+
+      <!-- Right Column: Interactive Details & Quick Triggers (6 Cols) -->
+      <div class="lg:col-span-6 space-y-6">
+
+        <!-- QR Scanner Quick Card -->
+        <div class="glass-panel p-6 rounded-3xl space-y-4 border-l-4 border-l-holiday-mint relative overflow-hidden">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-qrcode text-holiday-mint"></i>
+              <span>Instant App Scanner & Mobile Testing</span>
+            </h3>
+            <span class="text-[10px] font-mono px-2.5 py-0.5 rounded bg-holiday-pine text-holiday-mint border border-holiday-mint/30">SCAN & TEST</span>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center gap-4 bg-black/40 p-4 rounded-2xl border border-white/10">
+            <!-- Dynamic QR Code Image -->
+            <div class="bg-white p-2 rounded-xl shadow-lg shrink-0">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://rudhra0925-wq.github.io/careconnect.html&color=09130e&bgcolor=ffffff" alt="Scan to open mobile app" class="w-28 h-28">
+            </div>
+            <div class="space-y-1.5 text-left">
+              <div class="text-xs font-bold text-holiday-gold flex items-center gap-1.5">
+                <i class="fa-solid fa-camera"></i>
+                <span>Scan with any Phone Camera</span>
+              </div>
+              <p class="text-xs text-gray-300 leading-relaxed">
+                Scan this QR code with your Android or iPhone camera to launch CareConnect instantly on your mobile screen in full-screen touch mode!
+              </p>
+              <div class="pt-1 flex gap-2">
+                <button onclick="openModal('modal-app-scanner')" class="px-3 py-1.5 rounded-lg bg-holiday-pine hover:bg-holiday-emerald text-white text-[11px] font-bold flex items-center gap-1">
+                  <i class="fa-solid fa-expand"></i> <span>Open Full Scanner</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulator Quick Controls -->
+        <div class="glass-panel p-6 rounded-3xl space-y-4 border-l-4 border-l-blue-400">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-sliders text-blue-400"></i>
+              <span>Screen Navigation & Action Dispatcher</span>
+            </h3>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-300">INTERACTIVE</span>
+          </div>
+
+          <p class="text-xs text-gray-300 leading-relaxed">
+            Test any screen transition or launch popup forms directly to see the data flow into the simulated local database:
+          </p>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
+            <button onclick="switchScreen('screen-home')" class="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-200 text-left flex items-center gap-2">
+              <span>🏠</span> <span>Home Screen</span>
+            </button>
+            <button onclick="switchScreen('screen-animal')" class="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-200 text-left flex items-center gap-2">
+              <span>🐾</span> <span>Animal Welfare</span>
+            </button>
+            <button onclick="switchScreen('screen-food')" class="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-200 text-left flex items-center gap-2">
+              <span>🥣</span> <span>Food Distribution</span>
+            </button>
+            <button onclick="switchScreen('screen-env')" class="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-200 text-left flex items-center gap-2">
+              <span>🌱</span> <span>Environment</span>
+            </button>
+            <button onclick="openModal('modal-report-animal')" class="p-2.5 rounded-xl bg-orange-500/15 hover:bg-orange-500/25 border border-orange-500/30 text-xs font-semibold text-orange-200 text-left flex items-center gap-2">
+              <span>📢</span> <span>Report Animal</span>
+            </button>
+            <button onclick="openModal('modal-donate-food')" class="p-2.5 rounded-xl bg-blue-500/15 hover:bg-blue-500/25 border border-blue-500/30 text-xs font-semibold text-blue-200 text-left flex items-center gap-2">
+              <span>🍱</span> <span>Donate Food</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- MIT App Inventor AIA Package Status -->
+        <div class="glass-panel p-6 rounded-3xl space-y-3 border-l-4 border-l-holiday-gold">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-box-archive text-holiday-gold"></i>
+              <span>MIT App Inventor Package</span>
+            </h3>
+            <span class="text-xs font-mono text-holiday-gold">3.4 MB • READY</span>
+          </div>
+          <p class="text-xs text-gray-300">
+            Contains all `.scm` layout schemes, `.bky` Blockly logic files, 5 high-res assets, and `project.properties` compiled for MIT App Inventor 2.
+          </p>
+          <a href="CareConnect.aia" download="CareConnect.aia" class="w-full py-3 rounded-2xl bg-holiday-gold hover:bg-holiday-goldLight text-holiday-darkBg font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition-all">
+            <i class="fa-solid fa-download"></i>
+            <span>Download CareConnect.aia Source File</span>
+          </a>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==================== SECTION 2: THE APP SCANNER SUITE ==================== -->
+    <section id="scanner" class="glass-panel p-8 sm:p-10 rounded-3xl space-y-8 border-holiday-mint/30">
+      
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-5">
+        <div class="space-y-1.5">
+          <div class="inline-flex items-center gap-2 text-xs font-mono text-holiday-mint">
+            <i class="fa-solid fa-barcode"></i>
+            <span>BARCODE & QR CODE SCANNING SUITE</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white">
+            CareConnect App Scanner & Live Companion Pairing
+          </h2>
+        </div>
+        <button onclick="startInteractiveCameraScanner()" class="px-4 py-2.5 rounded-xl bg-holiday-pine hover:bg-holiday-emerald text-white text-xs font-bold flex items-center gap-2 shadow-md">
+          <i class="fa-solid fa-camera"></i>
+          <span>Launch Camera Viewfinder</span>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Scanner Tile 1: Live Mobile Launcher -->
+        <div class="bg-black/30 p-5 rounded-2xl border border-white/10 space-y-4 text-center">
+          <div class="bg-white p-3 rounded-xl inline-block shadow-md mx-auto">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://rudhra0925-wq.github.io/careconnect.html&color=09130e&bgcolor=ffffff" alt="Mobile Web App QR Code" class="w-36 h-36">
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white">1. Instant Mobile Web App</h3>
+            <p class="text-xs text-gray-300 mt-1">Scan to test the full mobile application directly in your phone browser without installing.</p>
+          </div>
+          <span class="inline-block text-[10px] font-mono px-2.5 py-1 rounded bg-holiday-pine/40 text-holiday-mint border border-holiday-pine">
+            HTTPS LIVE COMPATIBLE
+          </span>
+        </div>
+
+        <!-- Scanner Tile 2: Direct AIA Download -->
+        <div class="bg-black/30 p-5 rounded-2xl border border-white/10 space-y-4 text-center">
+          <div class="bg-white p-3 rounded-xl inline-block shadow-md mx-auto">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://rudhra0925-wq.github.io/CareConnect.aia&color=09130e&bgcolor=ffffff" alt="AIA Download QR Code" class="w-36 h-36">
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white">2. Download .AIA Package</h3>
+            <p class="text-xs text-gray-300 mt-1">Scan to download the complete MIT App Inventor `.aia` source archive directly to your device.</p>
+          </div>
+          <span class="inline-block text-[10px] font-mono px-2.5 py-1 rounded bg-holiday-gold/20 text-holiday-gold border border-holiday-gold/30">
+            PROJECT ARCHIVE
+          </span>
+        </div>
+
+        <!-- Scanner Tile 3: MIT AI2 Companion Code Simulator -->
+        <div class="bg-black/30 p-5 rounded-2xl border border-white/10 space-y-4 text-center">
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-700 space-y-2">
+            <div class="text-[10px] font-mono text-gray-400">AI2 6-CHARACTER PAIRING CODE</div>
+            <div class="text-2xl font-mono font-extrabold tracking-widest text-holiday-mint" id="companion-code">cc-2026</div>
+            <button onclick="generateNewPairingCode()" class="text-[10px] text-gray-400 hover:text-white underline">Regenerate Code</button>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white">3. MIT AI2 Companion</h3>
+            <p class="text-xs text-gray-300 mt-1">Open the free MIT AI2 Companion app on your Android phone, enter the 6-character code or scan the barcode to sync live.</p>
+          </div>
+          <button onclick="simulateCompanionSync()" class="w-full py-2 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-semibold text-white">
+            Simulate Companion Sync ⚡
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==================== SECTION 3: WORKING PROCESS PIPELINE ==================== -->
+    <section id="working-process" class="glass-panel p-8 sm:p-10 rounded-3xl space-y-8 border-holiday-gold/30">
+      
+      <div class="space-y-2">
+        <div class="inline-flex items-center gap-2 text-xs font-mono text-holiday-gold">
+          <i class="fa-solid fa-gears"></i>
+          <span>COMPLETE ARCHITECTURAL ENGINE</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">
+          CareConnect Working Process & Event Flow
+        </h2>
+        <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+          Here is how CareConnect processes data from the initial user click in MIT App Inventor components to local database logging and rescue dispatching.
+        </p>
+      </div>
+
+      <!-- 5-Stage Interactive Workflow Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+        
+        <!-- Stage 1 -->
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2.5 relative">
+          <div class="w-7 h-7 rounded-lg bg-holiday-pine text-holiday-mint font-bold text-xs flex items-center justify-center">
+            01
+          </div>
+          <h3 class="text-xs font-bold text-white">1. Screen Routing</h3>
+          <p class="text-[11px] text-gray-300 leading-relaxed">
+            User selects Animal, Food, or Environment on <code>Screen1</code>. Triggers <code>openAnotherScreen</code> with zero latency.
+          </p>
+          <div class="text-[10px] font-mono text-holiday-mint">when btn.Click</div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2.5 relative">
+          <div class="w-7 h-7 rounded-lg bg-holiday-pine text-holiday-mint font-bold text-xs flex items-center justify-center">
+            02
+          </div>
+          <h3 class="text-xs font-bold text-white">2. Form Intake</h3>
+          <p class="text-[11px] text-gray-300 leading-relaxed">
+            Dynamic input collection: Animal rescue urgency, surplus food portions, pickup time slots, and emergency SOS signals.
+          </p>
+          <div class="text-[10px] font-mono text-blue-300">Input Validation</div>
+        </div>
+
+        <!-- Stage 3 -->
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2.5 relative">
+          <div class="w-7 h-7 rounded-lg bg-holiday-pine text-holiday-mint font-bold text-xs flex items-center justify-center">
+            03
+          </div>
+          <h3 class="text-xs font-bold text-white">3. TinyDB Storage</h3>
+          <p class="text-[11px] text-gray-300 leading-relaxed">
+            Every submission is serialized into key-value records via <code>TinyDB.StoreValue</code> for offline persistent history.
+          </p>
+          <div class="text-[10px] font-mono text-purple-300">TinyDB.StoreValue</div>
+        </div>
+
+        <!-- Stage 4 -->
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2.5 relative">
+          <div class="w-7 h-7 rounded-lg bg-holiday-pine text-holiday-mint font-bold text-xs flex items-center justify-center">
+            04
+          </div>
+          <h3 class="text-xs font-bold text-white">4. Notifier Alert</h3>
+          <p class="text-[11px] text-gray-300 leading-relaxed">
+            Invokes <code>Notifier.ShowMessageDialog</code> with confirmation barcodes, volunteer pickup tracking, and success status.
+          </p>
+          <div class="text-[10px] font-mono text-holiday-gold">Notifier Dialog</div>
+        </div>
+
+        <!-- Stage 5 -->
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2.5 relative">
+          <div class="w-7 h-7 rounded-lg bg-holiday-red text-white font-bold text-xs flex items-center justify-center">
+            05
+          </div>
+          <h3 class="text-xs font-bold text-white">5. SOS Dispatch</h3>
+          <p class="text-[11px] text-gray-300 leading-relaxed">
+            Emergency SOS triggers phone dialer integration (<code>ActivityStarter</code> or <code>PhoneCall</code>) to 24/7 rescue ambulances.
+          </p>
+          <div class="text-[10px] font-mono text-red-300">24/7 Helpline</div>
+        </div>
+
+      </div>
+
+      <!-- Working Process Interactive Demonstration Box -->
+      <div class="p-5 rounded-2xl bg-black/40 border border-white/10 space-y-3">
+        <div class="flex items-center justify-between">
+          <h4 class="text-xs font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-terminal text-holiday-mint"></i>
+            <span>Live Process Execution Console</span>
+          </h4>
+          <span class="text-[10px] font-mono text-holiday-mint" id="process-status">Status: Ready</span>
+        </div>
+        <div class="p-3 bg-[#09130e] rounded-xl font-mono text-xs text-gray-300 space-y-1 h-28 overflow-y-auto app-screen-scroll border border-white/5" id="process-log">
+          <p class="text-gray-500">[0.00s] CareConnect Engine Initialized...</p>
+          <p class="text-holiday-mint">[0.05s] Loaded Form Components: Screen1, AnimalWelfare, FoodDistribution, EnvironmentScreen.</p>
+          <p class="text-holiday-gold">[0.10s] Connected to TinyDB local storage engine.</p>
+        </div>
+        <div class="flex flex-wrap gap-2 pt-1">
+          <button onclick="runProcessSimulation('animal')" class="px-3 py-1.5 rounded-lg bg-orange-600/30 hover:bg-orange-600/50 text-orange-200 border border-orange-500/40 text-xs font-semibold">
+            Test Animal Rescue Flow
+          </button>
+          <button onclick="runProcessSimulation('food')" class="px-3 py-1.5 rounded-lg bg-blue-600/30 hover:bg-blue-600/50 text-blue-200 border border-blue-500/40 text-xs font-semibold">
+            Test Food Pickup Flow
+          </button>
+          <button onclick="runProcessSimulation('env')" class="px-3 py-1.5 rounded-lg bg-green-600/30 hover:bg-green-600/50 text-green-200 border border-green-500/40 text-xs font-semibold">
+            Test Tree Adoption Flow
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- ==================== MODALS & POPUPS ==================== -->
+
+  <!-- Modal: Live App Scanner Viewfinder -->
+  <div id="modal-app-scanner" class="modal-overlay hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-panel max-w-lg w-full rounded-3xl p-6 space-y-5 border border-holiday-mint/40 text-white relative">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="text-sm font-bold flex items-center gap-2 text-holiday-mint">
+          <i class="fa-solid fa-camera"></i>
+          <span>CareConnect Mobile App Scanner</span>
+        </h3>
+        <button onclick="closeModal('modal-app-scanner')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-sm"></i></button>
+      </div>
+
+      <!-- Scanner Viewfinder Box -->
+      <div class="relative w-full h-64 bg-black rounded-2xl overflow-hidden border-2 border-dashed border-holiday-mint/60 flex flex-col items-center justify-center p-4 shadow-inner">
+        <div class="scanner-line"></div>
+        
+        <div class="w-40 h-40 border-2 border-holiday-mint rounded-2xl relative flex items-center justify-center bg-black/40">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://rudhra0925-wq.github.io/careconnect.html&color=52b788&bgcolor=000000" alt="QR Viewfinder" class="w-32 h-32 opacity-90">
+          <!-- Crosshair corners -->
+          <div class="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-holiday-gold"></div>
+          <div class="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-holiday-gold"></div>
+          <div class="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-holiday-gold"></div>
+          <div class="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-holiday-gold"></div>
+        </div>
+
+        <p class="text-[11px] text-holiday-mint font-mono mt-3 animate-pulse">
+          Target Code Detected: https://rudhra0925-wq.github.io/careconnect.html
+        </p>
+      </div>
+
+      <div class="flex gap-2">
+        <button onclick="openScannedUrl()" class="flex-1 py-2.5 rounded-xl bg-holiday-pine hover:bg-holiday-emerald text-white text-xs font-bold shadow transition-all">
+          Open Scanned URL 🚀
+        </button>
+        <button onclick="closeModal('modal-app-scanner')" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-semibold">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal 1: Report Animal -->
+  <div id="modal-report-animal" class="modal-overlay hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel max-w-md w-full rounded-3xl p-6 space-y-4 border border-orange-500/30 text-white relative">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="text-sm font-bold flex items-center gap-2 text-orange-300">
+          <i class="fa-solid fa-bullhorn"></i>
+          <span>Report an Injured or Stray Animal</span>
+        </h3>
+        <button onclick="closeModal('modal-report-animal')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-sm"></i></button>
+      </div>
+
+      <form onsubmit="handleAnimalReport(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block text-gray-300 mb-1">Animal Type</label>
+          <select id="report-animal-type" class="w-full bg-[#09130e] border border-white/20 rounded-xl p-2.5 text-white focus:border-holiday-mint focus:outline-none">
+            <option>Dog / Puppy 🐕</option>
+            <option>Cat / Kitten 🐈</option>
+            <option>Bird / Avian 🦜</option>
+            <option>Cattle / Cow 🐄</option>
+            <option>Other Animal</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-gray-300 mb-1">Condition & Situation</label>
+          <select id="report-animal-condition" class="w-full bg-[#09130e] border border-white/20 rounded-xl p-2.5 text-white focus:border-holiday-mint focus:outline-none">
+            <option>Injured / Needs Medical Aid 🚨</option>
+            <option>Abandoned Stray Puppy/Kitten</option>
+            <option>Trapped / Needs Rescue Equipment</option>
+            <option>Malnourished / Starving</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-gray-300 mb-1">Location Details</label>
+          <input type="text" id="report-animal-location" placeholder="e.g. Near West Gate, College Campus" required class="w-full bg-[#09130e] border border-white/20 rounded-xl p-2.5 text-white focus:border-holiday-mint focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-gray-300 mb-1">Your Contact Phone (Optional)</label>
+          <input type="tel" id="report-animal-phone" placeholder="e.g. 8807633624" class="w-full bg-[#09130e] border border-white/20 rounded-xl p-2.5 text-white focus:border-holiday-mint focus:outline-none">
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold transition-all shadow-lg">
+          Submit Rescue Alert 🚨
+        </button>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Modal 2: Donate for Animals -->
+  <div id="modal-donate-animal" class="modal-overlay hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel max-w-md w-full rounded-3xl p-6 space-y-4 border border-green-500/30 text-white relative">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="text-sm font-bold flex items-center gap-2 text-green-300">
+          <i class="fa-solid fa-hand-holding-heart"></i>
+          <span>Donate for Animal Care & Shelter</span>
+        </h3>
+        <button onclick="closeModal('modal-donate-animal')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-sm"></i></button>
+      </div>
+
+      <form onsubmit="handleAnimalDonation(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block text-gray-300 mb-1">Donation Category</label>
+          <div class="grid grid-cols-3 gap-2">
+            <label class="p-2 rounded-xl bg-white/5 border border-white/10 text-center cursor-pointer hover:border-holiday-mint block">
+              <input type="radio" name="don-cat" value="Pet Food" checked class="mr-1"> Food
+            </label>
+            <label class="p-2 rounded-xl bg-white/5 border border-white/10 text-center cursor-pointer hover:border-holiday-mint block">
+              <input type="radio" name="don-cat" value="Medicine" class="mr-1"> Medical
+            </label>
+            <label class="p-2 rounded-xl bg-white/5 border border-white/10 text-center cursor-pointer hover:border-holiday-mint block">
+              <input type="radio" name="don-cat" value="Shelter Fund" class="mr-1"> Shelter
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-gray-300 mb-1">Select Amount (INR)</label>
+          <div class="grid grid-cols-4 gap-2">
+            <button type="button" onclick="setDonAmount(250)" class="p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10">₹250</button>
+            <button type="button" onclick="setDonAmount(500)" class="p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10">₹500</button>
+            <button type="button" onclick="setDonAmount(1000)" class="p-2 rounded-xl bg-holiday-pine border border-holiday-mint">₹1,000</button>
+            <button type="button" onclick="setDonAmount(2500)" class="p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10">₹2,500</button>
+          </div>
+          <input type="number" id="don-amount-input" value="1000" class="w-full bg-[#09130e] border border-white/20 rounded-xl p-2.5 mt-2 text-white focus:border-holiday-mint focus:outline-none">
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-xl bg-holiday-pine hover:bg-holiday-emerald text-white font-bold transition-all shadow-lg">
+          Complete Contribution ❤️
+        </button>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Modal 3: Adoption Gallery -->
+  <div id="modal-adopt" class="modal-overlay hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel max-w-lg w-full rounded-3xl p-6 space-y-4 border border-purple-500/30 text-white relative">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="text-sm font-bold flex items-center gap-2 text-purple-300">
+          <i class="fa-solid fa-house-chimney-heart"></i>
+          <span>Loving Animals Looking for a Home</span>
+        </h3>
+        <button onclick="closeModal('modal-adopt')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-sm"></i></button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-80 overflow-y-auto app-screen-scroll p-1">
+        
+        <div class="bg-white/5 p-3 rounded-2xl border border-white/10 space-y-2">
+          <div class="h-28 rounded-xl overflow-hidden bg-black/40">
+            <img src="assets/careconnect/banner_animal.jpg" alt="Buddy" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-bold text-white">Buddy & Luna</h4>
+              <span class="text-[9px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full font-bold">Bonded Pair</span>
+            </div>
+            <p class="text-[10px] text-gray-400">Golden pup & Kitten • Vaccinated</p>
+          </div>
+          <button onclick="requestAdoption('Buddy & Luna')" class="w-full py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-[10px] font-bold">
+            Adopt Me 🐾
+          </button>
+        </div>
+
+        <div class="bg-white/5 p-3 rounded-2xl border border-white/10 space-y-2">
+          <div class="h-28 rounded-xl overflow-hidden bg-black/40 flex items-center justify-center text-4xl">
+            🐕
+          </div>
+          <div>
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-bold text-white">Rocky the Beagle</h4>
+              <span class="text-[9px] bg-green-500/20 text-green-300 px-2 py-0.5 rounded-full font-bold">1 Year Old</span>
+            </div>
+            <p class="text-[10px] text-gray-400">Playful, energetic, friendly with kids</p>
+          </div>
+          <button onclick="requestAdoption('Rocky the Beagle')" class="w-full py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-[10px] font-bold">
+            Adopt Me 🐾
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal 4: Donate Food -->
+  <div id="modal-donate-food" class="modal-overlay hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel max-w-md w-full rounded-3xl p-6 space-y-4 border border-blue-500/30 text-white relative">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="text-sm font-bold flex items-center gap-2 text-blue-300">
+          <i class="fa-solid fa-utensils"></i>
+          <span>Donate Surplus Food</span>
+        </h3>
+        <button onclick="closeModal('modal-donate-food')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-sm"></i></button>
+      </div>
+
+      <form onsubmit="handleFoodDonation(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block text-gray-300 mb-1">Food Category</label>
+          <select id="food-don-type" class="w-full bg-[#09130e] border border-white/20 rounded-xl p-2.5 text-white focus:border-blue-400 focus:outline-none">
+            <option>Freshly Cooked Meals (Event/Hostel/Home) 🍛</option>
+            <option>Raw Vegetables & Fruits 🥦🍎</option>
+            <option>Packaged Groceries & Grains 📦</option>
+            <option>Bakery & Bread 🍞</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-gray-300 mb-1">Quantity (Meals / Servings)</label>
+            <input type="number" id="food-don-servings" placeholder="e.g. 25" min="1" required class="w-full bg-[#09130e] border border-white/20 rounded-xl p-2.5 text-white focus:border-blue-400 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-gray-300 mb-1">Prepared Time</label>
+            <input type="time" id="food-don-time" value="12:00" class="w-full bg-[#09130e] border border-white/20 rounded-xl p-2.5 text-white focus:border-blue-400 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-gray-300 mb-1">Pickup Address & Landmark</label>
+          <input type="text" id="food-don-address" placeholder="e.g. Community Center, 2nd Cross Street" required class="w-full bg-[#09130e] border border-white/20 rounded-xl p-2.5 text-white focus:border-blue-400 focus:outline-none">
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all shadow-lg">
+          Schedule Volunteer Pickup 🚚
+        </button>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Modal 5: Request Food -->
+  <div id="modal-request-food" class="modal-overlay hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel max-w-md w-full rounded-3xl p-6 space-y-4 border border-amber-500/30 text-white relative">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="text-sm font-bold flex items-center gap-2 text-amber-300">
+          <i class="fa-solid fa-hand-holding"></i>
+          <span>Request Food Support</span>
+        </h3>
+        <button onclick="closeModal('modal-request-food')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-sm"></i></button>
+      </div>
+
+      <form onsubmit="handleFoodRequest(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block text-gray-300 mb-1">Beneficiary Type</label>
+          <select id="food-req-type" class="w-full bg-[#09130e] border border-white/20 rounded-xl p-2.5 text-white focus:border-amber-400 focus:outline-none">
+            <option>Individual / Family in Need</option>
+            <option>Community Shelter / Orphanage</option>
+            <option>Elderly Care Facility</option>
+            <option>Daily Wage Workers Group</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-gray-300 mb-1">Number of People to Feed</label>
+          <input type="number" id="food-req-count" placeholder="e.g. 5" min="1" required class="w-full bg-[#09130e] border border-white/20 rounded-xl p-2.5 text-white focus:border-amber-400 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-gray-300 mb-1">Delivery Location</label>
+          <input type="text" id="food-req-loc" placeholder="e.g. Sector 4, Slum Resettlement Area" required class="w-full bg-[#09130e] border border-white/20 rounded-xl p-2.5 text-white focus:border-amber-400 focus:outline-none">
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold transition-all shadow-lg">
+          Dispatch Food Support 🍲
+        </button>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Modal 6: Emergency Helpline SOS -->
+  <div id="modal-emergency" class="modal-overlay hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel max-w-md w-full rounded-3xl p-6 space-y-4 border border-holiday-red text-white relative text-center">
+      <div class="w-14 h-14 rounded-full bg-holiday-red/20 text-holiday-red flex items-center justify-center text-2xl mx-auto animate-bounce">
+        🚨
+      </div>
+      <h3 class="text-base font-bold text-white">24/7 Animal & Disaster Emergency</h3>
+      <p class="text-xs text-gray-300 leading-relaxed">
+        Immediate dispatch for critically injured wildlife, stray accidents, and urgent food rescue.
+      </p>
+
+      <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+        <div class="text-xs text-gray-400">Emergency Toll-Free Helpline:</div>
+        <div class="text-xl font-mono font-bold text-holiday-mint">1800-227-3738</div>
+        <div class="text-[10px] text-gray-400">(1800-CARE-PETS)</div>
+      </div>
+
+      <div class="flex gap-2">
+        <button onclick="closeModal('modal-emergency')" class="flex-1 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-semibold">Dismiss</button>
+        <a href="tel:18002273738" class="flex-1 py-2.5 rounded-xl bg-holiday-red hover:bg-holiday-darkRed text-xs font-bold text-white flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-phone"></i>
+          <span>Call Ambulance</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Toast Popup Notification -->
+  <div id="toast-popup" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 max-w-sm w-full bg-[#1b4332] text-white p-4 rounded-2xl border border-holiday-mint shadow-2xl flex items-center gap-3">
+    <div class="w-8 h-8 rounded-full bg-holiday-mint/20 text-holiday-mint flex items-center justify-center text-sm shrink-0">
+      <i class="fa-solid fa-bell"></i>
+    </div>
+    <div class="flex-grow text-xs leading-snug" id="toast-message">Notification</div>
+  </div>
+
+
+  <!-- Footer -->
+  <footer class="border-t border-white/10 py-8 px-4 text-center text-xs text-gray-400 space-y-2">
+    <p>CareConnect Mobile Application • Designed by Rithika H for MIT App Inventor</p>
+    <p class="text-gray-500 text-[11px]">© 2026 CareConnect Initiative. Full AIA and APK sources ready.</p>
+  </footer>
+
+
+  <!-- Interactive Simulator & Scanner Logic -->
+  <script>
+    // Live Clock for Simulator
+    function updateClock() {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const clockEl = document.getElementById('sim-clock');
+      if (clockEl) clockEl.textContent = `${hours}:${minutes}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Screen Switching in Simulator
+    function switchScreen(screenId) {
+      document.querySelectorAll('.screen-view').forEach(screen => {
+        screen.classList.add('hidden');
+        screen.classList.remove('active');
+      });
+
+      const target = document.getElementById(screenId);
+      if (target) {
+        target.classList.remove('hidden');
+        target.classList.add('active');
+      }
+
+      // Update Nav Tabs
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.classList.remove('text-holiday-mint', 'active');
+        tab.classList.add('text-gray-400');
+      });
+
+      if (screenId === 'screen-home' || screenId === 'screen-animal' || screenId === 'screen-food' || screenId === 'screen-env') {
+        const homeTab = document.getElementById('tab-home');
+        if (homeTab) {
+          homeTab.classList.add('text-holiday-mint', 'active');
+          homeTab.classList.remove('text-gray-400');
+        }
+      } else if (screenId === 'screen-activity') {
+        const actTab = document.getElementById('tab-activity');
+        if (actTab) {
+          actTab.classList.add('text-holiday-mint', 'active');
+          actTab.classList.remove('text-gray-400');
+        }
+        renderActivityList();
+      } else if (screenId === 'screen-profile') {
+        const profTab = document.getElementById('tab-profile');
+        if (profTab) {
+          profTab.classList.add('text-holiday-mint', 'active');
+          profTab.classList.remove('text-gray-400');
+        }
+      }
+    }
+
+    // Modal Control
+    function openModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) modal.classList.add('hidden');
+    }
+
+    // Toast Notification
+    function showNotification(msg) {
+      const toast = document.getElementById('toast-popup');
+      const toastMsg = document.getElementById('toast-message');
+      if (toast && toastMsg) {
+        toastMsg.textContent = msg;
+        toast.classList.remove('translate-y-20', 'opacity-0');
+        setTimeout(() => {
+          toast.classList.add('translate-y-20', 'opacity-0');
+        }, 4000);
+      }
+    }
+
+    // Open Scanned URL
+    function openScannedUrl() {
+      window.open('https://rudhra0925-wq.github.io/careconnect.html', '_blank');
+      closeModal('modal-app-scanner');
+    }
+
+    function startInteractiveCameraScanner() {
+      openModal('modal-app-scanner');
+      showNotification('Camera viewfinder initialized. Ready to scan QR code or launch app!');
+    }
+
+    function generateNewPairingCode() {
+      const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+      let code = '';
+      for (let i = 0; i < 6; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      document.getElementById('companion-code').textContent = code;
+      showNotification(`Generated new AI2 Companion Pairing Code: ${code}`);
+    }
+
+    function simulateCompanionSync() {
+      showNotification('⚡ Synchronizing with MIT AI2 Companion... Screen assets & blocks synced!');
+      const logEl = document.getElementById('process-log');
+      if (logEl) {
+        logEl.innerHTML += `<p class="text-holiday-mint">[SYNC] AI2 Companion device paired successfully.</p>`;
+      }
+    }
+
+    // Simulated TinyDB Activity Logging
+    function logActivity(icon, title, desc, tag) {
+      const activities = JSON.parse(localStorage.getItem('careconnect_activities') || '[]');
+      const newAct = {
+        id: Date.now(),
+        icon: icon,
+        title: title,
+        desc: desc,
+        tag: tag,
+        time: 'Just now'
+      };
+      activities.unshift(newAct);
+      localStorage.setItem('careconnect_activities', JSON.stringify(activities));
+    }
+
+    function renderActivityList() {
+      const container = document.getElementById('activity-list-container');
+      if (!container) return;
+
+      const activities = JSON.parse(localStorage.getItem('careconnect_activities') || '[]');
+      if (activities.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-10 text-gray-400 space-y-2">
+            <div class="text-3xl">🕊️</div>
+            <p class="text-xs">No logged actions yet. Report an animal or donate food to see your impact here!</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = activities.map(act => `
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-3 flex items-start gap-3">
+          <div class="w-8 h-8 rounded-xl bg-holiday-pine text-white flex items-center justify-center text-sm shrink-0">
+            ${act.icon}
+          </div>
+          <div class="flex-grow">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-bold text-white">${act.title}</h4>
+              <span class="text-[9px] text-holiday-mint font-mono">${act.time}</span>
+            </div>
+            <p class="text-[10px] text-gray-300 mt-0.5">${act.desc}</p>
+            <span class="inline-block text-[8px] px-2 py-0.5 mt-1 rounded bg-white/10 text-gray-300">${act.tag}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function clearActivityLogs() {
+      localStorage.removeItem('careconnect_activities');
+      renderActivityList();
+      showNotification('Activity log cleared.');
+    }
+
+    // Process Simulation Engine
+    function runProcessSimulation(flow) {
+      const logEl = document.getElementById('process-log');
+      const statusEl = document.getElementById('process-status');
+      if (!logEl || !statusEl) return;
+
+      if (flow === 'animal') {
+        statusEl.textContent = 'Running: Animal Rescue Flow';
+        logEl.innerHTML += `
+          <p class="text-orange-300 mt-2">[EVENT] Button.Click -> openAnotherScreen("AnimalWelfare")</p>
+          <p class="text-gray-300">[ACTION] Form inputs validated: Stray puppy in distress.</p>
+          <p class="text-holiday-mint">[TINYDB] Stored key 'last_rescue' = { type: 'Dog', status: 'Pending' }</p>
+          <p class="text-holiday-gold">[NOTIFIER] ShowMessageDialog("Rescue alert dispatched!")</p>
+        `;
+        showNotification('🐾 Process complete: Rescue alert recorded in TinyDB and Notifier fired!');
+      } else if (flow === 'food') {
+        statusEl.textContent = 'Running: Food Pickup Flow';
+        logEl.innerHTML += `
+          <p class="text-blue-300 mt-2">[EVENT] Button.Click -> openAnotherScreen("FoodDistribution")</p>
+          <p class="text-gray-300">[ACTION] Surplus meals count = 25 portions logged.</p>
+          <p class="text-holiday-mint">[TINYDB] Stored key 'food_donation_log' = { servings: 25, pickup: 'Scheduled' }</p>
+          <p class="text-holiday-gold">[NOTIFIER] ShowMessageDialog("Volunteer rider assigned!")</p>
+        `;
+        showNotification('🍲 Process complete: Food donation recorded and rider scheduled!');
+      } else if (flow === 'env') {
+        statusEl.textContent = 'Running: Tree Adoption Flow';
+        logEl.innerHTML += `
+          <p class="text-green-300 mt-2">[EVENT] Button.Click -> openAnotherScreen("EnvironmentScreen")</p>
+          <p class="text-gray-300">[ACTION] Adopt a sapling requested.</p>
+          <p class="text-holiday-mint">[TINYDB] Updated user impact points: +50 Eco-Points.</p>
+          <p class="text-holiday-gold">[NOTIFIER] ShowAlert("Sapling planted in your honor!")</p>
+        `;
+        showNotification('🌱 Process complete: 50 Eco-Points added to your Profile!');
+      }
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    // Form Submissions
+    function handleAnimalReport(e) {
+      e.preventDefault();
+      const type = document.getElementById('report-animal-type').value;
+      const cond = document.getElementById('report-animal-condition').value;
+      const loc = document.getElementById('report-animal-location').value;
+      
+      logActivity('🚨', `Animal Rescue Alert: ${type}`, `${cond} reported at ${loc}. Shelter team notified.`, 'Animal Welfare');
+      closeModal('modal-report-animal');
+      showNotification(`Rescue request for ${type} submitted! Rapid response dispatching.`);
+      e.target.reset();
+    }
+
+    function setDonAmount(amt) {
+      const input = document.getElementById('don-amount-input');
+      if (input) input.value = amt;
+    }
+
+    function handleAnimalDonation(e) {
+      e.preventDefault();
+      const cat = document.querySelector('input[name="don-cat"]:checked').value;
+      const amt = document.getElementById('don-amount-input').value;
+
+      logActivity('💚', `Donation: ₹${amt} for ${cat}`, `Thank you for supporting our shelter food & medical funds.`, 'Donation');
+      closeModal('modal-donate-animal');
+      showNotification(`Thank you! ₹${amt} donation for ${cat} received with love.`);
+    }
+
+    function requestAdoption(petName) {
+      logActivity('🏠', `Adoption Application: ${petName}`, `Shelter coordinator will arrange a meet & greet visit.`, 'Adoption');
+      closeModal('modal-adopt');
+      showNotification(`Adoption inquiry for ${petName} registered!`);
+    }
+
+    function handleFoodDonation(e) {
+      e.preventDefault();
+      const type = document.getElementById('food-don-type').value;
+      const count = document.getElementById('food-don-servings').value;
+      const addr = document.getElementById('food-don-address').value;
+
+      logActivity('🍱', `Food Donation: ${count} Meals`, `${type} scheduled for pickup from ${addr}.`, 'Food Distribution');
+      closeModal('modal-donate-food');
+      showNotification(`${count} surplus meals pickup scheduled successfully!`);
+      e.target.reset();
+    }
+
+    function handleFoodRequest(e) {
+      e.preventDefault();
+      const type = document.getElementById('food-req-type').value;
+      const count = document.getElementById('food-req-count').value;
+      const loc = document.getElementById('food-req-loc').value;
+
+      logActivity('🤲', `Food Request: ${count} Meals`, `Support requested for ${type} at ${loc}.`, 'Food Support');
+      closeModal('modal-request-food');
+      showNotification(`Food delivery of ${count} meals dispatched to ${loc}.`);
+      e.target.reset();
+    }
+
+    // Seed sample initial activity if empty
+    if (!localStorage.getItem('careconnect_activities')) {
+      logActivity('🌱', 'Welcome to CareConnect', 'Your community kindness journey begins today.', 'System');
+      logActivity('🐾', 'Nearby Animal Shelter', '14 puppies vaccinated at City Animal Rescue.', 'Shelter News');
+    }
+
+    // Falling Snow Particle Background
+    (function initSnow() {
+      const canvas = document.getElementById('snow-canvas');
+      const ctx = canvas.getContext('2d');
+      let width = (canvas.width = window.innerWidth);
+      let height = (canvas.height = window.innerHeight);
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      const particleCount = 45;
+      const particles = [];
+
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: Math.random() * 2 + 0.8,
+          speedY: Math.random() * 0.7 + 0.2,
+          speedX: Math.random() * 0.4 - 0.2,
+          opacity: Math.random() * 0.5 + 0.2
+        });
+      }
+
+      function drawSnow() {
+        ctx.clearRect(0, 0, width, height);
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2, true);
+          ctx.fillStyle = `rgba(240, 248, 255, ${p.opacity})`;
+          ctx.fill();
+
+          p.y += p.speedY;
+          p.x += p.speedX;
+
+          if (p.y > height) {
+            p.y = -5;
+            p.x = Math.random() * width;
+          }
+          if (p.x > width) p.x = 0;
+          if (p.x < 0) p.x = width;
+        }
+        requestAnimationFrame(drawSnow);
+      }
+      drawSnow();
+    })();
+  </script>
+
+</body>
+</html>
